@@ -7,6 +7,7 @@
 //
 
 #import "PaymentResult.h"
+#import "Utility.h"
 #import "TransactionData.h"
 
 @implementation PaymentResult
@@ -42,6 +43,8 @@
 #pragma mark - Other methods
 -(void)updateControls
 {
+    [Utility updateTextWithViewController:self];
+    
     if (mTransactionData)
     {
         NSMutableString *dataString = [[NSMutableString alloc] init];

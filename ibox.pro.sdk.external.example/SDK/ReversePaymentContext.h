@@ -8,16 +8,9 @@
 
 #import "PaymentContext.h"
 
-typedef enum
-{
-    ReverseMode_Cancel,
-    ReverseMode_Return
-} ReverseMode;
-
 @interface ReversePaymentContext : PaymentContext
 
 @property (nonatomic, retain) NSString *TransactionID;
-@property (nonatomic, assign) ReverseMode ReverseType;
 
 @end
 

@@ -9,9 +9,17 @@
 #import <Foundation/Foundation.h>
 #import "DescriptionProduct.h"
 
+typedef enum
+{
+    TransactionInputType_Swipe = 2,
+    TransactionInputType_Chip = 3,
+    TransactionInputType_Cash = 10
+} TransactionInputType;
+
 @interface TransactionItem : NSObject
 
 -(DescriptionProduct *)customFieldsProduct;
+-(TransactionInputType)inputType;
 -(NSString *)ID;
 -(NSString *)date;
 -(NSString *)amountFormat;
@@ -44,6 +52,5 @@
 -(int)currencyDecimalsCount;
 -(int)state;
 -(int)subState;
--(int)inputType;
 
 @end

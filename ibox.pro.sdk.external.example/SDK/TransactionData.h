@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TransactionItem.h"
 
 typedef enum
 {
@@ -19,9 +20,10 @@ typedef enum
 
 @property (nonatomic, assign) TransactionDataType Type;
 @property (nonatomic, assign) double Amount;
+@property (nonatomic, assign) BOOL RequiredSignature;
 @property (nonatomic, retain) NSString *ID;
 @property (nonatomic, retain) NSString *Invoice;
 @property (nonatomic, retain) NSString *CardNumber;
-@property (nonatomic, assign) BOOL RequiredSignature;
+@property (nonatomic, retain) TransactionItem *Transaction;
 
 @end

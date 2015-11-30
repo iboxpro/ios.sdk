@@ -7,6 +7,7 @@
 //
 
 #import "Schedule.h"
+#import "Utility.h"
 #import "RecurrentPaymentContext.h"
 #import "PaymentResult.h"
 
@@ -56,9 +57,12 @@
 {
     [super viewDidLoad];
     
+    [Utility updateTextWithViewController:self];
+    
     mDateFormatter = [[NSDateFormatter alloc] init];
-    mLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"ru_RU"];
-    [mDateFormatter setLocale:mLocale];
+    //mLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"ru_RU"];
+    //[mDateFormatter setLocale:mLocale];
+    [mDateFormatter setLocale:[NSLocale currentLocale]];
     
     [viewDayPicker setDataSource:self];
     [viewDayPicker setDelegate:self];
@@ -161,7 +165,7 @@
         if (row < 31)
             titleString = [NSString stringWithFormat:@"%d", (int)row + 1];
         else
-            titleString = @"Последний день";
+            titleString = [Utility localizedStringWithKey:@"schedule_last_day"];
     }
     return titleString;
 }
@@ -195,14 +199,14 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIActionSheet *repeatMenu = [[UIActionSheet alloc] initWithTitle:@"Периодичность" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    UIActionSheet *repeatMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"schedule_type"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
     [repeatMenu setTag:1];
-    [repeatMenu addButtonWithTitle:@"Только один раз"];
-    [repeatMenu addButtonWithTitle:@"Еженедельно"];
-    [repeatMenu addButtonWithTitle:@"Каждый месяц"];
-    [repeatMenu addButtonWithTitle:@"Ежеквартально"];
-    [repeatMenu addButtonWithTitle:@"Каждый год"];
-    [repeatMenu addButtonWithTitle:@"В заданые дни"];
+    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_delayed_once"]];
+    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_weekly"]];
+    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_monthly"]];
+    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_quarterly"]];
+    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_annual"]];
+    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_arbitrary_dates"]];
     [repeatMenu showInView:self.view];
     [repeatMenu release];
 }
@@ -213,7 +217,7 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIActionSheet *weekDayMenu = [[UIActionSheet alloc] initWithTitle:@"День недели" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    UIActionSheet *weekDayMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"schedule_week_day"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
     [weekDayMenu setTag:2];
     for (int i = 0; i < 7; i++)
         [weekDayMenu addButtonWithTitle:[[mDateFormatter standaloneWeekdaySymbols] objectAtIndex:i]];
@@ -227,7 +231,7 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIActionSheet *monthMenu = [[UIActionSheet alloc] initWithTitle:@"Месяц" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    UIActionSheet *monthMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"schedule_month"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
     [monthMenu setTag:3];
     if (mRecurrentPaymentContext.Type == ScheduleType_Annual)
     {
@@ -293,39 +297,39 @@
     NSString *typeString = @"";
     if (mRecurrentPaymentContext.Type == ScheduleType_Weekly)
     {
-        typeString = @"Еженедельно";
+        typeString = [Utility localizedStringWithKey:@"schedule_type_weekly"];
         [cntWeekDayHeight setConstant:46.0f];
         [lblWeekDay setText:[[mDateFormatter standaloneWeekdaySymbols] objectAtIndex:mRecurrentPaymentContext.Day]];
     }
     else if (mRecurrentPaymentContext.Type == ScheduleType_Monthly)
     {
-        typeString = @"Каждый месяц";
+        typeString = [Utility localizedStringWithKey:@"schedule_type_monthly"];
         [cntDayHeight setConstant:200.0f];
     }
     else if (mRecurrentPaymentContext.Type == ScheduleType_Quarterly)
     {
-        typeString = @"Ежеквартально";
+        typeString = [Utility localizedStringWithKey:@"schedule_type_quarterly"];
         [cntDayHeight setConstant:200.0f];
         [cntMonthHeight setConstant:46.0f];
         [lblMonth setText:[NSString stringWithFormat:@"%d", mRecurrentPaymentContext.Month]];
     }
     else if (mRecurrentPaymentContext.Type == ScheduleType_Annual)
     {
-        typeString = @"Каждый год";
+        typeString = [Utility localizedStringWithKey:@"schedule_type_annual"];
         [cntDayHeight setConstant:200.0f];
         [cntMonthHeight setConstant:46.0f];
         [lblMonth setText:[[mDateFormatter standaloneMonthSymbols] objectAtIndex:mRecurrentPaymentContext.Month - 1]];
     }
     else if (mRecurrentPaymentContext.Type == ScheduleType_ArbitraryDates)
     {
-        typeString = @"В заданые дни";
+        typeString = [Utility localizedStringWithKey:@"schedule_type_arbitrary_dates"];
         [cntEndHeight setConstant:0.0f];
         [cntStartHeight setConstant:0.0f];
         [cntDaysHeight setConstant:73.0f];
     }
     else if (mRecurrentPaymentContext.Type == ScheduleType_DelayedOnce)
     {
-        typeString = @"Только один раз";
+        typeString = [Utility localizedStringWithKey:@"schedule_type_delayed_once"];
         [cntEndHeight setConstant:0.0f];
     }
     [lblRepeat setText:typeString];

@@ -35,14 +35,16 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLq-bO-cqS">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="310"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KuZ-IY-Hq3">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KuZ-IY-Hq3">
                                     <rect key="frame" x="30" y="8" width="129" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="EGJ-Ck-01x"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <inset key="contentEdgeInsets" minX="4" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <state key="normal" title="История"/>
+                                    <state key="normal" title="[history_title]">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
                                 </button>
                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ain-aU-T7f">
                                     <rect key="frame" x="167" y="8" width="123" height="29"/>
@@ -51,11 +53,11 @@
                                         <constraint firstAttribute="width" constant="123" id="lmE-dI-WaG"/>
                                     </constraints>
                                     <segments>
-                                        <segment title="Платеж"/>
-                                        <segment title="Продукт"/>
+                                        <segment title="[initial_payment]"/>
+                                        <segment title="[initial_product_payment]"/>
                                     </segments>
                                 </segmentedControl>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eql-HM-k8m">
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="[common_email_hint]" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eql-HM-k8m">
                                     <rect key="frame" x="30" y="44" width="260" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="yID-jC-Agq"/>
@@ -63,7 +65,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hXJ-eJ-8MK">
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="[common_password_hint]" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hXJ-eJ-8MK">
                                     <rect key="frame" x="30" y="82" width="260" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="LYc-ug-Ye9"/>
@@ -71,18 +73,18 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                 </textField>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Amount" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="623-Sd-de2">
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="[common_amount_hint]" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="623-Sd-de2">
                                     <rect key="frame" x="30" y="120" width="260" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="A85-Qe-Gfz"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                    <textInputTraits key="textInputTraits"/>
                                 </textField>
                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rny-YR-iwe">
                                     <rect key="frame" x="30" y="158" width="260" height="0.0"/>
                                     <subviews>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Product field 1" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QgZ-3T-d6a">
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="[initial_product_field_hint]" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="QgZ-3T-d6a">
                                             <rect key="frame" x="0.0" y="0.0" width="260" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="3ah-Tu-AdL"/>
@@ -90,7 +92,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits"/>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Product field 2" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dt9-ny-uqu">
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="[initial_product_field_hint]" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dt9-ny-uqu">
                                             <rect key="frame" x="0.0" y="38" width="260" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="dmn-ms-Qxy"/>
@@ -110,7 +112,7 @@
                                         <constraint firstItem="Dt9-ny-uqu" firstAttribute="top" secondItem="QgZ-3T-d6a" secondAttribute="bottom" constant="8" id="yed-05-efl"/>
                                     </constraints>
                                 </view>
-                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Vg-nU-XtZ">
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="[common_description_hint]" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Vg-nU-XtZ">
                                     <rect key="frame" x="30" y="158" width="260" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="WfU-Sm-H9G"/>
@@ -135,35 +137,41 @@
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E7f-dj-gsf">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E7f-dj-gsf">
                                     <rect key="frame" x="190" y="234" width="100" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="100" id="W3Q-cF-YxW"/>
                                         <constraint firstAttribute="height" constant="30" id="kMK-qC-Ztn"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
-                                    <state key="normal" title="Оплата"/>
+                                    <state key="normal" title="[common_pay]">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cbb-lC-Djo">
-                                    <rect key="frame" x="190" y="272" width="100" height="30"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cbb-lC-Djo">
+                                    <rect key="frame" x="130" y="272" width="160" height="30"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="100" id="Rqf-Zr-FiX"/>
+                                        <constraint firstAttribute="width" constant="160" id="Rqf-Zr-FiX"/>
                                         <constraint firstAttribute="height" constant="30" id="Xj1-T6-Ke3"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
-                                    <state key="normal" title="Ping"/>
+                                    <state key="normal" title="[initial_ping]">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sHC-bm-Wz5">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sHC-bm-Wz5">
                                     <rect key="frame" x="30" y="234" width="140" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="140" id="Lvd-Du-vOw"/>
                                         <constraint firstAttribute="height" constant="30" id="t3F-u8-NYk"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <inset key="contentEdgeInsets" minX="4" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    <state key="normal" title="Забыть BT ридер"/>
+                                    <state key="normal" title="[initial_forgot_bt_reader]">
+                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
                                 </button>
                             </subviews>
                             <constraints>

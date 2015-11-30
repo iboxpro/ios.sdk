@@ -11,7 +11,11 @@
 
 // common
 #define CONSTS_AMOUNT_FORMAT                                    @"%.2lf p."
+
+// keys
 #define CONSTS_KEY_BTREADER_ID                                  @"key_btreader_id"
+#define CONSTS_KEY_READER_CONNECTED                             @"connected"
+#define CONSTS_KEY_READER_CHARGE                                @"charge"
 
 // colors
 #define CONSTS_COLOR_BACKGROUND                                 [UIColor whiteColor]

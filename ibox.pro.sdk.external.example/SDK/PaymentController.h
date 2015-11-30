@@ -18,9 +18,17 @@ typedef enum
     PaymentControllerErrorType_Common,
     PaymentControllerErrorType_Swipe,
     PaymentControllerErrorType_OnlineProcess,
-    PaymentControllerErrorType_EMV,
+    PaymentControllerErrorType_EMV_ERROR,
+    PaymentControllerErrorType_EMV_TERMINATED,
+    PaymentControllerErrorType_EMV_DECLINED,
+    PaymentControllerErrorType_EMV_CANCEL,
+    PaymentControllerErrorType_EMV_CARD_ERROR,
+    PaymentControllerErrorType_EMV_CARD_BLOCKED,
+    PaymentControllerErrorType_EMV_DEVICE_ERROR,
+    PaymentControllerErrorType_EMV_CARD_NOT_SUPPORTED,
+    PaymentControllerErrorType_EMV_ZERO_TRAN,
     PaymentControllerErrorType_ScheduleSteps,
-    PaymentControllerErrorType_ReverseCash
+    PaymentControllerErrorType_Reverse
 } PaymentControllerErrorType;
 
 typedef enum

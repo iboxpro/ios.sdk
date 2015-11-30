@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
@@ -16,13 +16,15 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ccc-Xn-4od">
-                    <rect key="frame" x="8" y="20" width="80" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ccc-Xn-4od">
+                    <rect key="frame" x="10" y="20" width="80" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="Unp-Ya-O4R"/>
                         <constraint firstAttribute="width" constant="80" id="YFp-Hc-Fic"/>
                     </constraints>
-                    <state key="normal" title="Закрыть">
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="[common_close]">
+                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
@@ -50,7 +52,7 @@
                 <constraint firstAttribute="trailing" secondItem="ADT-pf-PfM" secondAttribute="trailing" id="qL6-8m-K1w"/>
                 <constraint firstItem="ADT-pf-PfM" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="r69-Pz-aCO"/>
                 <constraint firstAttribute="bottom" secondItem="ADT-pf-PfM" secondAttribute="bottom" id="tvy-uv-KI1"/>
-                <constraint firstItem="ccc-Xn-4od" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="zaO-4P-RtT"/>
+                <constraint firstItem="ccc-Xn-4od" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="zaO-4P-RtT"/>
             </constraints>
             <point key="canvasLocation" x="619" y="471"/>
         </view>

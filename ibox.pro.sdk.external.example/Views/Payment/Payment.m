@@ -7,20 +7,13 @@
 //
 
 #import "Payment.h"
+#import "Utility.h"
 #import "Consts.h"
 #import "AppDelegate.h"
 #import "PaymentContext.h"
 #import "StepItem.h"
 #import "UIActionSheet+Blocks.h"
 #import "DRToast.h"
-
-#define STRING_PROCESSING                           @"Пожалуйста, подождите..."
-#define STRING_READER_INIT                          @"Инициализация ридера..."
-#define STRING_READER_CONNECT                       @"Подключите ридер"
-#define STRING_READER_SWIPE_OR_INSERT               @"Вставьте карту или проведите магнитной полосой"
-#define STRING_READER_SWIPE                         @"Проведите магнитной полосой"
-#define STRING_READER_CARD_ERROR                    @"Ошибка карты"
-#define STRING_READER_CARD_EJECT                    @"Извлеките карту"
 
 @implementation Payment
 
@@ -45,18 +38,17 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    [Utility updateTextWithViewController:self];
     
     [[PaymentController instance] setDelegate:self];
     [[PaymentController instance] setPaymentContext:mPaymentContext];
     [[PaymentController instance] enable];
     
-    if ([mPaymentContext Cash])
-        [lblText setText:STRING_PROCESSING];
+    if ([mPaymentContext isKindOfClass:[ReversePaymentContext class]] ||
+        [mPaymentContext isKindOfClass:[RecurrentPaymentContext class]])
+        [lblText setText:[Utility localizedStringWithKey:@"payment_processung"]];
     else
-    {
-        if (![mPaymentContext isKindOfClass:[RecurrentPaymentContext class]])
-            [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : STRING_READER_CONNECT];
-    }
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
     
     [btnClose addTarget:self action:@selector(btnCloseClick) forControlEvents:UIControlEventTouchUpInside];
     
@@ -105,7 +97,7 @@
     else
     {
         [[PaymentController instance] scheduleStepsConfirm];
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : STRING_READER_CONNECT];
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
     }
 }
 
@@ -120,21 +112,23 @@
     if (event == PaymentControllerReaderEventType_Initialize)
         [lblText setText:[self readerReady4ActionString]];
     else if (event == PaymentControllerReaderEventType_Connect)
-        [lblText setText:STRING_READER_INIT];
+        [lblText setText:[Utility localizedStringWithKey:@"payment_reader_init"]];
     else if (event == PaymentControllerReaderEventType_Disconnect)
-        [lblText setText:STRING_READER_CONNECT];
+        [lblText setText:[Utility localizedStringWithKey:@"payment_reader_connect"]];
     else if (event == PaymentControllerReaderEventType_StartEMV ||
              event == PaymentControllerReaderEventType_SwipeCard ||
              event == PaymentControllerReaderEventType_CardInsertedCorrect)
-        [lblText setText:STRING_PROCESSING];
+        [lblText setText:[Utility localizedStringWithKey:@"payment_processung"]];
     else if (event == PaymentControllerReaderEventType_CardInsertedWrong)
-        [[[DRToast alloc] initWithMessage:STRING_READER_CARD_ERROR] show];
+        [[[DRToast alloc] initWithMessage:[Utility localizedStringWithKey:@"payment_card_error"]] show];
     else if (event == PaymentControllerReaderEventType_EjectCardTimeout)
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : STRING_READER_CONNECT];
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
 }
 
 -(void)PaymentControllerDone:(TransactionData *)transactionData
 {
+    NSLog(@"%@", [[transactionData Transaction] cardNumber]);
+    
     [self.navigationController popViewControllerAnimated:FALSE];
     
     if (mDelegate && [mDelegate respondsToSelector:@selector(paymentFinished:)])
@@ -150,10 +144,29 @@
         [[[DRToast alloc] initWithMessage:message] show];
     
     if (error == PaymentControllerErrorType_Swipe)
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : STRING_READER_CONNECT];
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+    else if (error == PaymentControllerErrorType_EMV_ZERO_TRAN)
+    {
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+        [[[DRToast alloc] initWithMessage:[Utility localizedStringWithKey:@"payment_error_zero_transaction"]] show];
+    }
+    else if (error == PaymentControllerErrorType_Reverse)
+    {
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+        [[[DRToast alloc] initWithMessage:[Utility localizedStringWithKey:@"payment_error_reverse"]] show];
+    }
     else if (error == PaymentControllerErrorType_OnlineProcess ||
-             error == PaymentControllerErrorType_EMV)
-        [lblText setText:STRING_READER_CARD_EJECT];
+             error == PaymentControllerErrorType_EMV_ERROR ||
+             error == PaymentControllerErrorType_EMV_TERMINATED ||
+             error == PaymentControllerErrorType_EMV_DECLINED ||
+             error == PaymentControllerErrorType_EMV_CANCEL ||
+             error == PaymentControllerErrorType_EMV_CARD_ERROR ||
+             error == PaymentControllerErrorType_EMV_CARD_BLOCKED ||
+             error == PaymentControllerErrorType_EMV_DEVICE_ERROR ||
+             error == PaymentControllerErrorType_EMV_CARD_NOT_SUPPORTED)
+    {
+        [lblText setText:[Utility localizedStringWithKey:@"payment_card_eject"]];
+    }
 }
 
 -(void)PaymentControllerRequestBTDevice:(NSArray *)devices
@@ -189,7 +202,7 @@
             }
             else
             {
-                mBTDevicesMenu = [[UIActionSheet alloc] initWithTitle:@"Выберите ридер" delegate:NULL cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
+                mBTDevicesMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_select_reader_type"] delegate:NULL cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
                 for (CBPeripheral *device in devices)
                     [mBTDevicesMenu addButtonWithTitle:[device name]];
                 [mBTDevicesMenu setTapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex){
@@ -216,7 +229,7 @@
 
 -(void)PaymentControllerRequestCardApplication:(NSArray *)applications
 {
-    mCardAppsMenu = [[UIActionSheet alloc] initWithTitle:@"Выберите прилолжение" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    mCardAppsMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"payment_choose_card_app"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
     for (NSString *application in applications)
         [mCardAppsMenu addButtonWithTitle:application];
     [mCardAppsMenu showInView:self.view];
@@ -225,7 +238,7 @@
 
 -(void)PaymentControllerScheduleStepsStart
 {
-    [lblText setText:STRING_PROCESSING];
+    [lblText setText:[Utility localizedStringWithKey:@"payment_processung"]];
 }
 
 -(void)PaymentControllerScheduleStepsCreated:(NSArray *)scheduleSteps
@@ -241,7 +254,7 @@
         }
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Шаги" message:message delegate:self cancelButtonTitle:@"Отменить" otherButtonTitles:@"Далее", NULL];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"payment_steps"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:[Utility localizedStringWithKey:@"common_next"], NULL];
     [alert show];
 }
 
@@ -267,9 +280,9 @@
 {
     if ([mPaymentContext isKindOfClass:[RecurrentPaymentContext class]] ||
         [mPaymentContext isKindOfClass:[ReversePaymentContext class]])
-        return STRING_READER_SWIPE;
+        return [Utility localizedStringWithKey:@"payment_swipe"];
     else
-        return STRING_READER_SWIPE_OR_INSERT;
+        return [Utility localizedStringWithKey:@"payment_swipe_insert"];
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "Initial.h"
+#import "Utility.h"
 #import "Consts.h"
 #import "PaymentController.h"
 #import "Payment.h"
@@ -62,9 +63,9 @@
     [txtPayType resignFirstResponder];
     [txtAmount resignFirstResponder];
     
-    mPaymentMenu = [[UIActionSheet alloc] initWithTitle:@"Оплатить" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
-    [mPaymentMenu addButtonWithTitle:@"Банковской картой"];
-    [mPaymentMenu addButtonWithTitle:@"Рекуррентный платеж"];
+    mPaymentMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_payment"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_card"]];
+    [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_recurrent"]];
     [mPaymentMenu showInView:self.view];
     [mPaymentMenu release];
 }
@@ -77,9 +78,9 @@
     [txtPayType resignFirstResponder];
     [txtAmount resignFirstResponder];
     
-    mReaderMenu = [[UIActionSheet alloc] initWithTitle:@"Выберите тип ридера" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:NULL otherButtonTitles:NULL];
-    [mReaderMenu addButtonWithTitle:@"Chip&Sign"];
-    [mReaderMenu addButtonWithTitle:@"Chip&PIN"];
+    mReaderMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_select_reader_type"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"]  destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
     [mReaderMenu showInView:self.view];
     [mReaderMenu release];
 }
@@ -103,9 +104,9 @@
 -(void)btnPingClick
 {
     [[PaymentController instance] pingReaderWithDoneAction:^(NSDictionary *readerData) {
-        int charge = [[readerData objectForKey:@"charge"] intValue];
-        BOOL connected = [[readerData objectForKey:@"connected"] boolValue];
-        [[[DRToast alloc] initWithMessage:connected ? [NSString stringWithFormat:@"Connected. Battery level: %d", charge] : @"Not connected."] show];
+        int charge = [[readerData objectForKey:CONSTS_KEY_READER_CHARGE] intValue];
+        BOOL connected = [[readerData objectForKey:CONSTS_KEY_READER_CONNECTED] boolValue];
+        [[[DRToast alloc] initWithMessage:connected ? [NSString stringWithFormat:[Utility localizedStringWithKey:@"initial_ping_connected"], charge] : [Utility localizedStringWithKey:@"initial_ping_not_connected"]] show];
         NSLog(@"%@", readerData);
     }];
 }
@@ -182,7 +183,7 @@
         else if (buttonIndex == 2)
             [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndPIN];
         
-        NSString *strReaderType = (buttonIndex == 1 ? @"Chip&Sign" : @"Chip&PIN");
+        NSString *strReaderType = [Utility localizedStringWithKey:buttonIndex == 1 ? @"initial_reader_type_chipsign" : @"initial_reader_type_chippin"];
         [txtPayType setText:strReaderType];
     }
 }
@@ -190,13 +191,15 @@
 #pragma mark - Other methods
 -(void)updateControls
 {
+    [Utility updateTextWithViewController:self];
+    
     [txtEmail setText:@"agent@integration.demo"];
     [txtPassword setText:@"integration123"];
-    [txtAmount setText:@"13"];
+    [txtAmount setText:@"1.4"];
     [txtDescription setText:@"Test payment"];
     
     [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndSign];
-    [txtPayType setText:@"Chip&Sign"];
+    [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
     
     [[PaymentController instance] setRequestTimeOut:30];
     

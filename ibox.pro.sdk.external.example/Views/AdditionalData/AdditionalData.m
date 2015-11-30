@@ -7,6 +7,7 @@
 //
 
 #import "AdditionalData.h"
+#import "Utility.h"
 #import "PaymentController.h"
 #import "DRToast.h"
 #import "PaymentResult.h"
@@ -111,6 +112,8 @@
 #pragma mark - Other methods
 -(void)updateControls
 {
+    [Utility updateTextWithViewController:self];
+    
     [txtReceiptMail setDelegate:self];
     [txtReceiptPhone setDelegate:self];
     

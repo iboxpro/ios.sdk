@@ -1,0 +1,70 @@
+/* Commom */
+"common_ok" = "Ok";
+"common_cancel" = "Cancel";
+"common_pay" = "Pay";
+"common_next" = "Next";
+"common_close" = "Close";
+"common_done" = "Done";
+"common_error" = "Common error";
+"common_email_hint" = "Email";
+"common_phone_hint" = "Phone";
+"common_password_hint" = "Password";
+"common_amount_hint" = "Amount";
+"common_description_hint" = "Description";
+"common_no_description" = "no description";
+
+/* Initial */
+"initial_ping" = "Ping";
+"initial_ping_connected" = "Connected. Battery level: %d";
+"initial_ping_not_connected" = "Not connected.";
+"initial_forgot_bt_reader" = "Forgot BT reader";
+"initial_payment" = "Payment";
+"initial_payment_type_card" = "Card payment";
+"initial_payment_type_recurrent" = "Recurrent payment";
+"initial_product_payment" = "Product";
+"initial_product_field_hint" = "Product field";
+"initial_select_reader_type" = "Select reader type";
+"initial_reader_type_chippin" = "Chip@PIN";
+"initial_reader_type_chipsign" = "Chip&Sign";
+
+/* History */
+"history_title" = "History";
+"history_transaction" = "Transaction";
+"history_input_transaction_id" = "Enter transaction ID";
+"history_transaction_details" = "Transaction details";
+"history_cancel_payment" = "Cancel payment";
+"history_return_payment" = "Return payment";
+
+/* Schedule */
+"schedule_type" = "Repeat";
+"schedule_type_delayed_once" = "Delayed once";
+"schedule_type_weekly" = "Weekly";
+"schedule_type_monthly" = "Monthly";
+"schedule_type_quarterly" = "Quarterly";
+"schedule_type_annual" = "Annual";
+"schedule_type_arbitrary_dates" = "Arbitrary days";
+"schedule_start" = "Start";
+"schedule_end" = "End";
+"schedule_month" = "Month";
+"schedule_week_day" = "Week day";
+"schedule_day" = "Day";
+"schedule_last_day" = "Last day";
+"schedule_date" = "Date";
+"schedule_time" = "Time";
+"schedule_quantity" = "Qty";
+
+/* Payment */
+"payment_processung" = "Please wait...";
+"payment_reader_init" = "Reader initialization...";
+"payment_reader_connect" = "Connect reader";
+"payment_swipe_insert" = "Insert card or swipe";
+"payment_swipe" = "Swipe card";
+"payment_error_zero_transaction" = "Zerro amount";
+"payment_error_reverse" = "Cancelation error";
+"payment_card_error" = "Card error";
+"payment_card_eject" = "Eject card";
+"payment_choose_card_app" = "Choose application";
+"payment_steps" = "Steps";
+
+/* AdditionalData */
+"additional_data_signature" = "Signature";

@@ -1,0 +1,70 @@
+/* Commom */
+"common_ok" = "Ок";
+"common_cancel" = "Отмена";
+"common_pay" = "Оплата";
+"common_next" = "Далее";
+"common_close" = "Закрыть";
+"common_done" = "Готово";
+"common_error" = "Произошла ошибка";
+"common_email_hint" = "Email";
+"common_phone_hint" = "Телефон";
+"common_password_hint" = "Пароль";
+"common_amount_hint" = "Сумма";
+"common_description_hint" = "Описание";
+"common_no_description" = "Описание отсутствует";
+
+/* Initial */
+"initial_ping" = "Проверить ридер";
+"initial_ping_connected" = "Подключен. Уровень заряда батареи: %d";
+"initial_ping_not_connected" = "Не подключен.";
+"initial_forgot_bt_reader" = "Забыть BT ридер";
+"initial_payment" = "Платеж";
+"initial_payment_type_card" = "Банковской картой";
+"initial_payment_type_recurrent" = "Рекуррентный платеж";
+"initial_product_payment" = "Продукт";
+"initial_product_field_hint" = "Product field";
+"initial_select_reader_type" = "Выберите тип ридера";
+"initial_reader_type_chippin" = "Chip@PIN";
+"initial_reader_type_chipsign" = "Chip&Sign";
+
+/* History */
+"history_title" = "История";
+"history_transaction" = "Транзакция";
+"history_input_transaction_id" = "Введите Transaction ID";
+"history_transaction_details" = "Подробно о транзакции";
+"history_cancel_payment" = "Отмениить платеж";
+"history_return_payment" = "Возврат платежа";
+
+/* Schedule */
+"schedule_type" = "Периодичность";
+"schedule_type_delayed_once" = "Только один раз";
+"schedule_type_weekly" = "Еженедельно";
+"schedule_type_monthly" = "Каждый месяц";
+"schedule_type_quarterly" = "Ежеквартально";
+"schedule_type_annual" = "Каждый год";
+"schedule_type_arbitrary_dates" = "В заданые дни";
+"schedule_start" = "Начать";
+"schedule_end" = "Закончить";
+"schedule_month" = "Месяц";
+"schedule_week_day" = "День недели";
+"schedule_day" = "День";
+"schedule_last_day" = "Последний день";
+"schedule_date" = "Дата";
+"schedule_time" = "Время";
+"schedule_quantity" = "Кол-во";
+
+/* Payment */
+"payment_processung" = "Пожалуйста, подождите...";
+"payment_reader_init" = "Инициализация ридера...";
+"payment_reader_connect" = "Подключите ридер";
+"payment_swipe_insert" = "Вставьте карту или проведите магнитной полосой";
+"payment_swipe" = "Проведите магнитной полосой";
+"payment_error_zero_transaction" = "Сумма должна быть больше нуля";
+"payment_error_reverse" = "Ошибка проведения отмены платежа";
+"payment_card_error" = "Ошибка карты";
+"payment_card_eject" = "Извлеките карту";
+"payment_choose_card_app" = "Выберите прилолжение";
+"payment_steps" = "Шаги";
+
+/* AdditionalData */
+"additional_data_signature" = "Подпись";

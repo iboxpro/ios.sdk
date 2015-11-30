@@ -7,6 +7,8 @@
 //
 
 #import "History.h"
+#import "Utility.h"
+#import "Consts.h"
 #import "HistoryCell.h"
 #import "PaymentController.h"
 #import "PaymentResult.h"
@@ -59,7 +61,7 @@
     if (![viewActivity isHidden])
         return;
     
-    mTrIdAlert = [[UIAlertView alloc] initWithTitle:@"Введите Transaction ID" message:NULL delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", NULL];
+    mTrIdAlert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_input_transaction_id"] message:NULL delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:[Utility localizedStringWithKey:@"common_ok"], NULL];
     [mTrIdAlert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [mTrIdAlert show];
     
@@ -87,9 +89,7 @@
         else
         {
             ReversePaymentContext *reverseContext = [[ReversePaymentContext alloc] init];
-            [reverseContext setReverseType:[mSelectedTransaction canCancel] ? ReverseMode_Cancel : ReverseMode_Return];
             [reverseContext setTransactionID:[mSelectedTransaction ID]];
-            [reverseContext setCash:[mSelectedTransaction cashPayment]];
             
             Payment *payment = [[Payment alloc] init];
             [payment setPaymentContext:reverseContext];
@@ -107,7 +107,7 @@
     if (!transactionData)
         return;
     
-    if ([transactionData RequiredSignature] && ![mSelectedTransaction cashPayment])
+    if ([transactionData RequiredSignature])
     {
         AdditionalData *additionalData = [[AdditionalData alloc] init];
         [additionalData setTransactionData:transactionData];
@@ -158,8 +158,8 @@
     
     TransactionItem *transaction = [mData objectAtIndex:(int)indexPath.row];
     
-    [cell.lblTitle setText:([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : @"no description"];
-    [cell.lblAdd setText:[NSString stringWithFormat:@"%.2lf", 0 + [transaction amount]]];
+    [cell.lblTitle setText:([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
+    [cell.lblAdd setText:[NSString stringWithFormat:CONSTS_AMOUNT_FORMAT, 0 + [transaction amount]]];
     
     return cell;
 }
@@ -175,7 +175,7 @@
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nDate:%@", [transaction date]];
     [message appendString:@"\n----------------------------------------"];
-    [message appendFormat:@"\nDescription:%@", ([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : @"no description"];
+    [message appendFormat:@"\nDescription:%@", ([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nAmount:%.2lf", [transaction amount]];
     [message appendString:@"\n----------------------------------------"];
@@ -233,11 +233,11 @@
     
     NSString *returnButtonTitle = NULL;
     if ([transaction canCancel])
-        returnButtonTitle = @"Cancel";
+        returnButtonTitle = [Utility localizedStringWithKey:@"history_cancel_payment"];
     if ([transaction canReturn])
-        returnButtonTitle = @"Return";
+        returnButtonTitle = [Utility localizedStringWithKey:@"history_return_payment"];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Transaction details" message:message delegate:self cancelButtonTitle:@"Ок" otherButtonTitles:returnButtonTitle, NULL];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_transaction_details"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_ok"] otherButtonTitles:returnButtonTitle, NULL];
     [alert show];
     [alert release];
 }
@@ -261,6 +261,8 @@
 #pragma mark - Other methods
 -(void)updateControls
 {
+    [Utility updateTextWithViewController:self];
+    
     [self setAutomaticallyAdjustsScrollViewInsets:FALSE];
     [viewActivity setHidden:TRUE];
     

@@ -17,6 +17,5 @@
 @property (nonatomic, retain) NSString *ReceiptPhone;
 @property (nonatomic, retain) NSString *ProductCode;
 @property (nonatomic, retain) NSArray *ProductData;
-@property (nonatomic, assign) BOOL Cash;
 
 @end
