@@ -195,7 +195,7 @@
     
     [txtEmail setText:@"agent@integration.demo"];
     [txtPassword setText:@"integration123"];
-    [txtAmount setText:@"1.4"];
+    [txtAmount setText:@"100"];
     [txtDescription setText:@"Test payment"];
     
     [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndSign];
