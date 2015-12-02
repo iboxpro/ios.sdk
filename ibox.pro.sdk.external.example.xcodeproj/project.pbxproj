@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49683F701C0EECA300CF6CA3 /* libibox.pro.sdk.external.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */; };
 		5C031FFF1B500846005D8737 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C031FFD1B500846005D8737 /* History.m */; };
 		5C0320001B500846005D8737 /* History.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C031FFE1B500846005D8737 /* History.xib */; };
 		5C0320041B50128F005D8737 /* HistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0320021B50128F005D8737 /* HistoryCell.m */; };
@@ -18,12 +19,10 @@
 		5CAF8F711A7FD88800AB3B25 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CAF8F701A7FD88800AB3B25 /* main.m */; };
 		5CAF8F741A7FD88800AB3B25 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CAF8F731A7FD88800AB3B25 /* AppDelegate.m */; };
 		5CAF8F7C1A7FD88800AB3B25 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CAF8F7B1A7FD88800AB3B25 /* Images.xcassets */; };
-		5CAF8F7F1A7FD88800AB3B25 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CAF8F7D1A7FD88800AB3B25 /* LaunchScreen.xib */; };
 		5CC4475B1A80D4CC00F71FBD /* Initial.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC447581A80D4CC00F71FBD /* Initial.m */; };
 		5CC4475C1A80D4CC00F71FBD /* Initial.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CC4475A1A80D4CC00F71FBD /* Initial.xib */; };
 		5CC447601A80D4DD00F71FBD /* Payment.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC4475E1A80D4DD00F71FBD /* Payment.m */; };
 		5CC447611A80D4DD00F71FBD /* Payment.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CC4475F1A80D4DD00F71FBD /* Payment.xib */; };
-		5CC4476D1A80E8B100F71FBD /* libibox.pro.sdk.external.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC447681A80E8B100F71FBD /* libibox.pro.sdk.external.a */; };
 		5CC4476F1A80E9CA00F71FBD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC4476E1A80E9CA00F71FBD /* AudioToolbox.framework */; };
 		5CC447711A80E9D700F71FBD /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC447701A80E9D700F71FBD /* ExternalAccessory.framework */; };
 		5CC447751A80EA5A00F71FBD /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC447741A80EA5A00F71FBD /* MediaPlayer.framework */; };
@@ -31,6 +30,9 @@
 		5CC447791A80EA9A00F71FBD /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC447781A80EA9A00F71FBD /* GLKit.framework */; };
 		5CC4477B1A80EAA600F71FBD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC4477A1A80EAA600F71FBD /* AVFoundation.framework */; };
 		5CC4D59B1A9E2C0500F38B37 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC4D59A1A9E2C0500F38B37 /* UIActionSheet+Blocks.m */; };
+		5CE05A251B9D9632002E9E24 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5CE05A271B9D9632002E9E24 /* Localizable.strings */; };
+		5CE05A2D1B9D979A002E9E24 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CE05A2C1B9D979A002E9E24 /* LaunchScreen.xib */; };
+		5CE05A301B9D9899002E9E24 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE05A2F1B9D9899002E9E24 /* Utility.m */; };
 		5CE2A4D11B973B8C00707A43 /* DRToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE2A4CE1B973B8C00707A43 /* DRToast.m */; };
 		5CE2A4D21B973B8C00707A43 /* DRToastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE2A4D01B973B8C00707A43 /* DRToastManager.m */; };
 		5CE40C861B04D50F00B9196D /* Schedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE40C841B04D50F00B9196D /* Schedule.m */; };
@@ -38,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libibox.pro.sdk.external.a; sourceTree = "<group>"; };
 		496E6FC11A9757BD00750961 /* APIResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIResult.h; sourceTree = "<group>"; };
 		5C007E341B55510F00BC100C /* DescriptionProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionProduct.h; sourceTree = "<group>"; };
 		5C007E351B55510F00BC100C /* DescriptionProductField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionProductField.h; sourceTree = "<group>"; };
@@ -62,7 +65,6 @@
 		5CAF8F721A7FD88800AB3B25 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5CAF8F731A7FD88800AB3B25 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5CAF8F7B1A7FD88800AB3B25 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		5CAF8F7E1A7FD88800AB3B25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		5CAF8FB01A7FF1FA00AB3B25 /* Consts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Consts.h; sourceTree = "<group>"; };
 		5CC447581A80D4CC00F71FBD /* Initial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Initial.m; path = ibox.pro.sdk.external.example/Views/Initial/Initial.m; sourceTree = SOURCE_ROOT; };
 		5CC447591A80D4CC00F71FBD /* Initial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initial.h; path = ibox.pro.sdk.external.example/Views/Initial/Initial.h; sourceTree = SOURCE_ROOT; };
@@ -70,7 +72,6 @@
 		5CC4475D1A80D4DD00F71FBD /* Payment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Payment.h; path = ibox.pro.sdk.external.example/Views/Payment/Payment.h; sourceTree = SOURCE_ROOT; };
 		5CC4475E1A80D4DD00F71FBD /* Payment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Payment.m; path = ibox.pro.sdk.external.example/Views/Payment/Payment.m; sourceTree = SOURCE_ROOT; };
 		5CC4475F1A80D4DD00F71FBD /* Payment.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Payment.xib; path = ibox.pro.sdk.external.example/Views/Payment/Payment.xib; sourceTree = SOURCE_ROOT; };
-		5CC447681A80E8B100F71FBD /* libibox.pro.sdk.external.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libibox.pro.sdk.external.a; sourceTree = "<group>"; };
 		5CC4476A1A80E8B100F71FBD /* SignatureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignatureView.h; sourceTree = "<group>"; };
 		5CC4476E1A80E9CA00F71FBD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5CC447701A80E9D700F71FBD /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -83,6 +84,11 @@
 		5CC4D59A1A9E2C0500F38B37 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		5CC946221A94867600E1CF94 /* PaymentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentController.h; sourceTree = "<group>"; };
 		5CC946231A94873900E1CF94 /* TransactionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionData.h; sourceTree = "<group>"; };
+		5CE05A261B9D9632002E9E24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5CE05A281B9D964F002E9E24 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5CE05A2C1B9D979A002E9E24 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		5CE05A2E1B9D9899002E9E24 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		5CE05A2F1B9D9899002E9E24 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
 		5CE2A4CD1B973B8C00707A43 /* DRToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRToast.h; path = DRToast/DRToast.h; sourceTree = "<group>"; };
 		5CE2A4CE1B973B8C00707A43 /* DRToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DRToast.m; path = DRToast/DRToast.m; sourceTree = "<group>"; };
 		5CE2A4CF1B973B8C00707A43 /* DRToastManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRToastManager.h; path = DRToast/DRToastManager.h; sourceTree = "<group>"; };
@@ -101,13 +107,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49683F701C0EECA300CF6CA3 /* libibox.pro.sdk.external.a in Frameworks */,
 				5CC4477B1A80EAA600F71FBD /* AVFoundation.framework in Frameworks */,
 				5CC447791A80EA9A00F71FBD /* GLKit.framework in Frameworks */,
 				5CC447771A80EA9100F71FBD /* CoreLocation.framework in Frameworks */,
 				5CC447751A80EA5A00F71FBD /* MediaPlayer.framework in Frameworks */,
 				5CC447711A80E9D700F71FBD /* ExternalAccessory.framework in Frameworks */,
 				5CC4476F1A80E9CA00F71FBD /* AudioToolbox.framework in Frameworks */,
-				5CC4476D1A80E8B100F71FBD /* libibox.pro.sdk.external.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,7 +161,6 @@
 				5CAF8F731A7FD88800AB3B25 /* AppDelegate.m */,
 				5CAF8FB01A7FF1FA00AB3B25 /* Consts.h */,
 				5CAF8F7B1A7FD88800AB3B25 /* Images.xcassets */,
-				5CAF8F7D1A7FD88800AB3B25 /* LaunchScreen.xib */,
 				5CAF8F6E1A7FD88800AB3B25 /* Supporting Files */,
 			);
 			path = ibox.pro.sdk.external.example;
@@ -173,6 +178,8 @@
 				5CC4476E1A80E9CA00F71FBD /* AudioToolbox.framework */,
 				5CAF8F6F1A7FD88800AB3B25 /* Info.plist */,
 				5CAF8F701A7FD88800AB3B25 /* main.m */,
+				5CE05A2C1B9D979A002E9E24 /* LaunchScreen.xib */,
+				5CE05A271B9D9632002E9E24 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -232,6 +239,7 @@
 		5CAF8FA01A7FE6A600AB3B25 /* SDK */ = {
 			isa = PBXGroup;
 			children = (
+				49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */,
 				5C007E341B55510F00BC100C /* DescriptionProduct.h */,
 				5C007E351B55510F00BC100C /* DescriptionProductField.h */,
 				5C8B502A1B53BE2200CF4FBC /* TransactionProduct.h */,
@@ -245,7 +253,6 @@
 				5CE5C4621B985E5B00BF3C10 /* ReversePaymentContext.h */,
 				5CF35B821B0361E100048C07 /* RecurrentPaymentContext.h */,
 				5CC4476A1A80E8B100F71FBD /* SignatureView.h */,
-				5CC447681A80E8B100F71FBD /* libibox.pro.sdk.external.a */,
 			);
 			path = SDK;
 			sourceTree = "<group>";
@@ -263,6 +270,8 @@
 		5CC447821A80FADB00F71FBD /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5CE05A2E1B9D9899002E9E24 /* Utility.h */,
+				5CE05A2F1B9D9899002E9E24 /* Utility.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -324,7 +333,7 @@
 		5CAF8F631A7FD88800AB3B25 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = DevReactor;
 				TargetAttributes = {
 					5CAF8F6A1A7FD88800AB3B25 = {
@@ -340,6 +349,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 5CAF8F621A7FD88800AB3B25;
 			productRefGroup = 5CAF8F6C1A7FD88800AB3B25 /* Products */;
@@ -356,11 +366,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CAF8F7F1A7FD88800AB3B25 /* LaunchScreen.xib in Resources */,
+				5CE05A2D1B9D979A002E9E24 /* LaunchScreen.xib in Resources */,
 				5C0320051B50128F005D8737 /* HistoryCell.xib in Resources */,
 				5CAF8F7C1A7FD88800AB3B25 /* Images.xcassets in Resources */,
 				5CE40C871B04D50F00B9196D /* Schedule.xib in Resources */,
 				5CC4475C1A80D4CC00F71FBD /* Initial.xib in Resources */,
+				5CE05A251B9D9632002E9E24 /* Localizable.strings in Resources */,
 				5C9D3BEF1A822CDA009F5112 /* PaymentResult.xib in Resources */,
 				5CC447611A80D4DD00F71FBD /* Payment.xib in Resources */,
 				5C0320001B500846005D8737 /* History.xib in Resources */,
@@ -387,18 +398,20 @@
 				5CE2A4D11B973B8C00707A43 /* DRToast.m in Sources */,
 				5C031FFF1B500846005D8737 /* History.m in Sources */,
 				5C9D3BEE1A822CDA009F5112 /* PaymentResult.m in Sources */,
+				5CE05A301B9D9899002E9E24 /* Utility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		5CAF8F7D1A7FD88800AB3B25 /* LaunchScreen.xib */ = {
+		5CE05A271B9D9632002E9E24 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				5CAF8F7E1A7FD88800AB3B25 /* Base */,
+				5CE05A261B9D9632002E9E24 /* en */,
+				5CE05A281B9D964F002E9E24 /* ru */,
 			);
-			name = LaunchScreen.xib;
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -423,7 +436,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -464,6 +479,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -487,6 +503,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ibox.pro.sdk.external.example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -498,6 +515,7 @@
 					"-all_load",
 					"-lstdc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.devreactor.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -511,6 +529,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ibox.pro.sdk.external.example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -522,6 +541,7 @@
 					"-all_load",
 					"-lstdc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.devreactor.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
