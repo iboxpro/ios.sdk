@@ -195,7 +195,7 @@
     
     [txtEmail setText:@"agent@integration.demo"];
     [txtPassword setText:@"integration123"];
-    [txtAmount setText:@"100"];
+    [txtAmount setText:@"1.4"];
     [txtDescription setText:@"Test payment"];
     
     [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndSign];
@@ -217,6 +217,7 @@
     if (!paymentContext)
         return;
     
+    [paymentContext setCurrency:CurrencyType_VND];
     [paymentContext setAmount:[[txtAmount text] doubleValue]];
     
     if (!sgmProduct.selectedSegmentIndex)
