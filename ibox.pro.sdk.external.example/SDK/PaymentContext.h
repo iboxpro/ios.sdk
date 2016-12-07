@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TransactionItem.h"
 
 typedef enum
 {
@@ -24,5 +25,6 @@ typedef enum
 @property (nonatomic, retain) NSArray *ProductData;
 @property (nonatomic, retain) NSData *Image;
 @property (nonatomic, assign) CurrencyType Currency;
+@property (nonatomic, assign) TransactionInputType InputType;
 
 @end

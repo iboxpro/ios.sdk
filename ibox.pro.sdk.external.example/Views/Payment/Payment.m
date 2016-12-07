@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "PaymentContext.h"
 #import "StepItem.h"
+#import "BTDevice.h"
 #import "UIActionSheet+Blocks.h"
 #import "DRToast.h"
 
@@ -44,16 +45,18 @@
     [[PaymentController instance] setPaymentContext:mPaymentContext];
     [[PaymentController instance] enable];
     
-    if ([mPaymentContext isKindOfClass:[ReversePaymentContext class]] ||
+    if ([mPaymentContext InputType] == TransactionInputType_Cash ||
+        [mPaymentContext InputType] == TransactionInputType_Prepaid ||
+        [mPaymentContext isKindOfClass:[ReversePaymentContext class]] ||
         [mPaymentContext isKindOfClass:[RecurrentPaymentContext class]])
-        [lblText setText:[Utility localizedStringWithKey:@"payment_processung"]];
+        [lblText setText:[Utility localizedStringWithKey:@"payment_processing"]];
     else
         [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
     
     [btnClose addTarget:self action:@selector(btnCloseClick) forControlEvents:UIControlEventTouchUpInside];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disable) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enable) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disable) name:UIApplicationDidEnterBackgroundNotification object:NULL];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enable) name:UIApplicationWillEnterForegroundNotification object:NULL];
 }
 
 -(void)disable
@@ -92,12 +95,31 @@
 #pragma mark - UIAlertViewDelegate
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (!buttonIndex)
-        [self btnCloseClick];
+    if (alertView == mErrorAlert)
+    {
+        if (!buttonIndex)
+            [self btnCloseClick];
+        else
+        {
+            [[PaymentController instance] retry];
+            if ([mPaymentContext InputType] == TransactionInputType_Cash ||
+                [mPaymentContext InputType] == TransactionInputType_Prepaid)
+                [lblText setText:[Utility localizedStringWithKey:@"payment_processing"]];
+            else
+                [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+        }
+        [mErrorAlert release];
+        mErrorAlert = NULL;
+    }
     else
     {
-        [[PaymentController instance] scheduleStepsConfirm];
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+        if (!buttonIndex)
+            [self btnCloseClick];
+        else
+        {
+            [[PaymentController instance] scheduleStepsConfirm];
+            [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+        }
     }
 }
 
@@ -117,12 +139,8 @@
         [lblText setText:[Utility localizedStringWithKey:@"payment_reader_connect"]];
     else if (event == PaymentControllerReaderEventType_StartEMV ||
              event == PaymentControllerReaderEventType_SwipeCard ||
-             event == PaymentControllerReaderEventType_CardInsertedCorrect)
-        [lblText setText:[Utility localizedStringWithKey:@"payment_processung"]];
-    else if (event == PaymentControllerReaderEventType_CardInsertedWrong)
-        [[[DRToast alloc] initWithMessage:[Utility localizedStringWithKey:@"payment_card_error"]] show];
-    else if (event == PaymentControllerReaderEventType_EjectCardTimeout)
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+             event == PaymentControllerReaderEventType_CardInserted)
+        [lblText setText:[Utility localizedStringWithKey:@"payment_processing"]];
 }
 
 -(void)PaymentControllerDone:(TransactionData *)transactionData
@@ -140,39 +158,44 @@
 
 -(void)PaymentControllerError:(PaymentControllerErrorType)error Message:(NSString *)message
 {
-    if (message && ![message isEqualToString:@""])
-        [[[DRToast alloc] initWithMessage:message] show];
-    
-    if (error == PaymentControllerErrorType_Swipe)
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
-    else if (error == PaymentControllerErrorType_EMV_ZERO_TRAN)
+    if (error == PaymentControllerErrorType_ONLINE_PROCESS)
     {
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
-        [[[DRToast alloc] initWithMessage:[Utility localizedStringWithKey:@"payment_error_zero_transaction"]] show];
+        // wait for transaction result
+        NSLog(@"%@", message);
     }
-    else if (error == PaymentControllerErrorType_Reverse)
+    else
     {
-        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
-        [[[DRToast alloc] initWithMessage:[Utility localizedStringWithKey:@"payment_error_reverse"]] show];
-    }
-    else if (error == PaymentControllerErrorType_OnlineProcess ||
-             error == PaymentControllerErrorType_EMV_ERROR ||
-             error == PaymentControllerErrorType_EMV_TERMINATED ||
-             error == PaymentControllerErrorType_EMV_DECLINED ||
-             error == PaymentControllerErrorType_EMV_CANCEL ||
-             error == PaymentControllerErrorType_EMV_CARD_ERROR ||
-             error == PaymentControllerErrorType_EMV_CARD_BLOCKED ||
-             error == PaymentControllerErrorType_EMV_DEVICE_ERROR ||
-             error == PaymentControllerErrorType_EMV_CARD_NOT_SUPPORTED)
-    {
-        [lblText setText:[Utility localizedStringWithKey:@"payment_card_eject"]];
+        NSString *errorMessage = NULL;
+        if (message && ![message isEqualToString:@""])
+            errorMessage = message;
+        else
+        {
+            if (error == PaymentControllerErrorType_EMV_ZERO_TRAN)
+                errorMessage = [Utility localizedStringWithKey:@"payment_error_zero_transaction"];
+            else if (error == PaymentControllerErrorType_REVERSE ||
+                     error == PaymentControllerErrorType_REVERSE_CASH ||
+                     error == PaymentControllerErrorType_REVERSE_PREPAID)
+                errorMessage = [Utility localizedStringWithKey:@"payment_error_reverse"];
+            else
+                errorMessage = [Utility localizedStringWithKey:@"common_error"];
+        }
+        
+        if (mErrorAlert)
+        {
+            [mErrorAlert dismissWithClickedButtonIndex:0 animated:FALSE];
+            [mErrorAlert release];
+            mErrorAlert = NULL;
+        }
+        
+        mErrorAlert = [[UIAlertView alloc] initWithTitle:NULL message:errorMessage delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:[Utility localizedStringWithKey:@"common_retry"], NULL];
+        [mErrorAlert show];
     }
 }
 
 -(void)PaymentControllerRequestBTDevice:(NSArray *)devices
 {
     if (mBTDevicesMenu)
-        [mBTDevicesMenu dismissWithClickedButtonIndex:mBTDevicesMenu.cancelButtonIndex animated:FALSE];
+        [mBTDevicesMenu dismissWithClickedButtonIndex:[mBTDevicesMenu cancelButtonIndex] animated:FALSE];
     
     if (devices)
     {
@@ -181,8 +204,8 @@
         {
             for (int i = 0; i < [devices count]; i++)
             {
-                CBPeripheral *device = [devices objectAtIndex:i];
-                if ([readerID isEqualToString:[[device identifier] UUIDString]])
+                BTDevice *device = [devices objectAtIndex:i];
+                if ([readerID isEqualToString:[device ID]])
                 {
                     [[PaymentController instance] setBTDevice:i];
                     break;
@@ -193,17 +216,17 @@
         {
             if ([devices count] == 1)
             {
-                [[PaymentController instance] setBTDevice:0];
-                
                 NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                CBPeripheral *device = [devices objectAtIndex:0];
-                [prefs setObject:[[device identifier] UUIDString] forKey:CONSTS_KEY_BTREADER_ID];
+                BTDevice *device = [devices firstObject];
+                [prefs setObject:[device ID] forKey:CONSTS_KEY_BTREADER_ID];
                 [prefs synchronize];
+                
+                [[PaymentController instance] setBTDevice:0];
             }
             else
             {
                 mBTDevicesMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_select_reader_type"] delegate:NULL cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
-                for (CBPeripheral *device in devices)
+                for (BTDevice *device in devices)
                     [mBTDevicesMenu addButtonWithTitle:[device name]];
                 [mBTDevicesMenu setTapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex){
                     if (buttonIndex == actionSheet.cancelButtonIndex)
@@ -211,12 +234,13 @@
                     else
                     {
                         int deviceIndex = (int)buttonIndex - 1;
-                        [[PaymentController instance] setBTDevice:deviceIndex];
                         
                         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                        CBPeripheral *device = [devices objectAtIndex:deviceIndex];
-                        [prefs setObject:[[device identifier] UUIDString] forKey:CONSTS_KEY_BTREADER_ID];
+                        BTDevice *device = [devices objectAtIndex:deviceIndex];
+                        [prefs setObject:[device ID] forKey:CONSTS_KEY_BTREADER_ID];
                         [prefs synchronize];
+                        
+                        [[PaymentController instance] setBTDevice:deviceIndex];
                     }
                     mBTDevicesMenu = NULL;
                 }];
@@ -238,7 +262,7 @@
 
 -(void)PaymentControllerScheduleStepsStart
 {
-    [lblText setText:[Utility localizedStringWithKey:@"payment_processung"]];
+    [lblText setText:[Utility localizedStringWithKey:@"payment_processing"]];
 }
 
 -(void)PaymentControllerScheduleStepsCreated:(NSArray *)scheduleSteps

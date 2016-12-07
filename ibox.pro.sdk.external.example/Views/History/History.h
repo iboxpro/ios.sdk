@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Payment.h"
 
 @class TransactionItem;
 
-@interface History : UIViewController<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, PaymentDelegate>
+@interface History : UIViewController<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 {
 IBOutlet UIButton *btnClose;
 IBOutlet UIButton *btnTransaction;

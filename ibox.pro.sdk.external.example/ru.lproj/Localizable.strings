@@ -12,6 +12,8 @@
 "common_amount_hint" = "Сумма";
 "common_description_hint" = "Описание";
 "common_no_description" = "Описание отсутствует";
+"common_retry" = "Повтроить";
+"common_continue" = "Продолжить";
 
 /* Initial */
 "initial_ping" = "Проверить ридер";
@@ -20,12 +22,20 @@
 "initial_forgot_bt_reader" = "Забыть BT ридер";
 "initial_payment" = "Платеж";
 "initial_payment_type_card" = "Банковской картой";
+"initial_payment_type_cash" = "Наличными";
+"initial_payment_type_prepaid" = "Предоплата";
 "initial_payment_type_recurrent" = "Рекуррентный платеж";
 "initial_product_payment" = "Продукт";
 "initial_product_field_hint" = "Product field";
 "initial_select_reader_type" = "Выберите тип ридера";
-"initial_reader_type_chippin" = "Chip@PIN";
 "initial_reader_type_chipsign" = "Chip&Sign";
+"initial_reader_type_chipsignbt" = "Chip&SignBT";
+"initial_reader_type_chipper2x" = "Chipper2X";
+"initial_reader_type_chippin" = "Chip@PIN";
+"initial_reader_type_chippin2" = "Chip@PIN2";
+"initial_reader_type_qpos" = "QPOS";
+"initial_reader_type_qposmini" = "QPOSMini";
+"initial_reader_type_qposaudio" = "QPOSAudio";
 
 /* History */
 "history_title" = "История";
@@ -34,6 +44,9 @@
 "history_transaction_details" = "Подробно о транзакции";
 "history_cancel_payment" = "Отмениить платеж";
 "history_return_payment" = "Возврат платежа";
+
+/* Reverse */
+"reverse_amount" = "Сумма отмены";
 
 /* Schedule */
 "schedule_type" = "Периодичность";
@@ -54,7 +67,7 @@
 "schedule_quantity" = "Кол-во";
 
 /* Payment */
-"payment_processung" = "Пожалуйста, подождите...";
+"payment_processing" = "Пожалуйста, подождите...";
 "payment_reader_init" = "Инициализация ридера...";
 "payment_reader_connect" = "Подключите ридер";
 "payment_swipe_insert" = "Вставьте карту или проведите магнитной полосой";

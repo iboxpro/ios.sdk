@@ -42,5 +42,23 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is required to find out where you are</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Used for iboxPro</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used for iboxPro</string>
 </dict>
 </plist>

@@ -25,6 +25,7 @@ IBOutlet UILabel *lblText;
 @private PaymentContext *mPaymentContext;
 @private UIActionSheet *mCardAppsMenu;
 @private UIActionSheet *mBTDevicesMenu;
+@private UIAlertView *mErrorAlert;
 }
 
 -(Payment *)init;

@@ -10,14 +10,28 @@
 typedef enum
 {
     PaymentControllerReaderType_ChipAndSign,
-    PaymentControllerReaderType_ChipAndPIN
+    PaymentControllerReaderType_ChipAndSignBT,
+    PaymentControllerReaderType_ChipAndPIN,
+    PaymentControllerReaderType_ChipAndPIN2,
+    PaymentControllerReaderType_Chipper2X,
+    PaymentControllerReaderType_QPOS,
+    PaymentControllerReaderType_QPOSMini,
+    PaymentControllerReaderType_QPOSAudio
 } PaymentControllerReaderType;
 
 typedef enum
 {
-    PaymentControllerErrorType_Common,
-    PaymentControllerErrorType_Swipe,
-    PaymentControllerErrorType_OnlineProcess,
+    PaymentControllerErrorType_COMMON,
+    PaymentControllerErrorType_CARD_INSERTED_WRONG,
+    PaymentControllerErrorType_SUBMIT,
+    PaymentControllerErrorType_SUBMIT_CASH,
+    PaymentControllerErrorType_SUBMIT_PREPAID,
+    PaymentControllerErrorType_SWIPE,
+    PaymentControllerErrorType_ONLINE_PROCESS,
+    PaymentControllerErrorType_REVERSE,
+    PaymentControllerErrorType_REVERSE_CASH,
+    PaymentControllerErrorType_REVERSE_PREPAID,
+    PaymentControllerErrorType_SCHEDULE_STEPS,
     PaymentControllerErrorType_EMV_ERROR,
     PaymentControllerErrorType_EMV_TERMINATED,
     PaymentControllerErrorType_EMV_DECLINED,
@@ -26,9 +40,7 @@ typedef enum
     PaymentControllerErrorType_EMV_CARD_BLOCKED,
     PaymentControllerErrorType_EMV_DEVICE_ERROR,
     PaymentControllerErrorType_EMV_CARD_NOT_SUPPORTED,
-    PaymentControllerErrorType_EMV_ZERO_TRAN,
-    PaymentControllerErrorType_ScheduleSteps,
-    PaymentControllerErrorType_Reverse
+    PaymentControllerErrorType_EMV_ZERO_TRAN
 } PaymentControllerErrorType;
 
 typedef enum
@@ -36,9 +48,7 @@ typedef enum
     PaymentControllerReaderEventType_Initialize,
     PaymentControllerReaderEventType_Connect,
     PaymentControllerReaderEventType_Disconnect,
-    PaymentControllerReaderEventType_CardInsertedCorrect,
-    PaymentControllerReaderEventType_CardInsertedWrong,
-    PaymentControllerReaderEventType_EjectCardTimeout,
+    PaymentControllerReaderEventType_CardInserted,
     PaymentControllerReaderEventType_SwipeCard,
     PaymentControllerReaderEventType_StartEMV
 } PaymentControllerReaderEventType;
@@ -65,8 +75,10 @@ typedef enum
 -(void)setBTDevice:(int)device;
 -(void)enable;
 -(void)disable;
+-(void)retry;
 -(void)scheduleStepsConfirm;
 -(void)pingReaderWithDoneAction:(void (^)(NSDictionary *))doneAction;
+-(void)setSingleStepAuthentication:(BOOL)singleStepAuthentication;
 
 -(APIHistoryResult *)historyWithPage:(int)page;
 -(APIHistoryResult *)historyWithTransactionID:(NSString *)transactionID;

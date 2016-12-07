@@ -11,6 +11,8 @@
 
 // common
 #define CONSTS_AMOUNT_FORMAT                                    @"%.2lf p."
+#define CONSTS_CURRENCY_ID_RUB                                  @"RUB"
+#define CONSTS_CURRENCY_ID_VND                                  @"VND"
 
 // keys
 #define CONSTS_KEY_BTREADER_ID                                  @"key_btreader_id"

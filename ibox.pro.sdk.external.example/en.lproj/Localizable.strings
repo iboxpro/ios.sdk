@@ -12,6 +12,8 @@
 "common_amount_hint" = "Amount";
 "common_description_hint" = "Description";
 "common_no_description" = "no description";
+"common_retry" = "Retry";
+"common_continue" = "Continue";
 
 /* Initial */
 "initial_ping" = "Ping";
@@ -20,12 +22,20 @@
 "initial_forgot_bt_reader" = "Forgot BT reader";
 "initial_payment" = "Payment";
 "initial_payment_type_card" = "Card payment";
+"initial_payment_type_cash" = "Cash payment";
+"initial_payment_type_prepaid" = "Prepaid";
 "initial_payment_type_recurrent" = "Recurrent payment";
 "initial_product_payment" = "Product";
 "initial_product_field_hint" = "Product field";
 "initial_select_reader_type" = "Select reader type";
-"initial_reader_type_chippin" = "Chip@PIN";
 "initial_reader_type_chipsign" = "Chip&Sign";
+"initial_reader_type_chipsignbt" = "Chip&SignBT";
+"initial_reader_type_chipper2x" = "Chipper2X";
+"initial_reader_type_chippin" = "Chip@PIN";
+"initial_reader_type_chippin2" = "Chip@PIN2";
+"initial_reader_type_qpos" = "QPOS";
+"initial_reader_type_qposmini" = "QPOSMini";
+"initial_reader_type_qposaudio" = "QPOSAudio";
 
 /* History */
 "history_title" = "History";
@@ -34,6 +44,9 @@
 "history_transaction_details" = "Transaction details";
 "history_cancel_payment" = "Cancel payment";
 "history_return_payment" = "Return payment";
+
+/* Reverse */
+"reverse_amount" = "Reverse amount";
 
 /* Schedule */
 "schedule_type" = "Repeat";
@@ -54,7 +67,7 @@
 "schedule_quantity" = "Qty";
 
 /* Payment */
-"payment_processung" = "Please wait...";
+"payment_processing" = "Please wait...";
 "payment_reader_init" = "Reader initialization...";
 "payment_reader_connect" = "Connect reader";
 "payment_swipe_insert" = "Insert card or swipe";

@@ -11,6 +11,7 @@
 @interface ReversePaymentContext : PaymentContext
 
 @property (nonatomic, retain) NSString *TransactionID;
+@property (nonatomic, assign) double AmountReverse;
 
 @end
 

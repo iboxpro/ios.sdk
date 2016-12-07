@@ -7,12 +7,10 @@
 //
 
 #import "History.h"
+#import "Reverse.h"
 #import "Utility.h"
 #import "Consts.h"
 #import "HistoryCell.h"
-#import "PaymentController.h"
-#import "PaymentResult.h"
-#import "AdditionalData.h"
 #import "TransactionItem.h"
 #import "TransactionProduct.h"
 #import "DRToast.h"
@@ -88,38 +86,11 @@
         }
         else
         {
-            ReversePaymentContext *reverseContext = [[ReversePaymentContext alloc] init];
-            [reverseContext setTransactionID:[mSelectedTransaction ID]];
-            
-            Payment *payment = [[Payment alloc] init];
-            [payment setPaymentContext:reverseContext];
-            [payment setDelegate:self];
-            [self.navigationController pushViewController:payment animated:FALSE];
-            [reverseContext release];
-            [payment release];
+            Reverse *reverse = [[Reverse alloc] init];
+            [reverse setTransaction:mSelectedTransaction];
+            [self.navigationController pushViewController:reverse animated:TRUE];
+            [reverse release];
         }
-    }
-}
-
-#pragma mark - PaymentDelegate
--(void)paymentFinished:(TransactionData *)transactionData
-{
-    if (!transactionData)
-        return;
-    
-    if ([transactionData RequiredSignature])
-    {
-        AdditionalData *additionalData = [[AdditionalData alloc] init];
-        [additionalData setTransactionData:transactionData];
-        [self.navigationController pushViewController:additionalData animated:TRUE];
-        [additionalData release];
-    }
-    else
-    {
-        PaymentResult *paymentResult = [[PaymentResult alloc] init];
-        [paymentResult setTransactionData:transactionData];
-        [self.navigationController pushViewController:paymentResult animated:TRUE];
-        [paymentResult release];
     }
 }
 
@@ -159,7 +130,43 @@
     TransactionItem *transaction = [mData objectAtIndex:(int)indexPath.row];
     
     [cell.lblTitle setText:([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
-    [cell.lblAdd setText:[NSString stringWithFormat:CONSTS_AMOUNT_FORMAT, 0 + [transaction amount]]];
+    
+    NSString *amountString = [NSString stringWithFormat:CONSTS_AMOUNT_FORMAT, 0 + [transaction amount]];
+    
+    UIColor *color = NULL;
+    BOOL strikethrough = FALSE;
+    
+    if ([transaction displayMode] == TransactionItemDisplayMode_Success)
+        color = [UIColor blackColor];
+    else if ([transaction displayMode] == TransactionItemDisplayMode_Declined)
+        color = [UIColor redColor];
+    else if ([transaction displayMode] == TransactionItemDisplayMode_Reverse)
+        color = [UIColor grayColor];
+    else if ([transaction displayMode] == TransactionItemDisplayMode_Reversed)
+    {
+        color = [UIColor grayColor];
+        strikethrough = TRUE;
+    }
+    
+    [cell.lblAdd setText:amountString];
+    [cell.lblAdd setTextColor:color];
+    [cell.lblTitle setTextColor:color];
+    
+    if (strikethrough)
+    {
+        [cell.lblTitle strikethrough];
+        
+        if ([transaction amountEff])
+        {
+            NSString *amountEffString = [NSString stringWithFormat:CONSTS_AMOUNT_FORMAT, 0 + [transaction amountEff]];
+            NSString *amountTotslString = [NSString stringWithFormat:@"%@\n%@", amountString, amountEffString];
+            
+            [cell.lblAdd setText:amountTotslString];
+            [cell.lblAdd strikethroughWithRange:[amountTotslString rangeOfString:amountString]];
+        }
+        else
+            [cell.lblAdd strikethrough];
+    }
     
     return cell;
 }
@@ -178,12 +185,22 @@
     [message appendFormat:@"\nDescription:%@", ([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nAmount:%.2lf", [transaction amount]];
+    if ([transaction displayMode] == TransactionItemDisplayMode_Reversed)
+    {
+        if ([transaction amountEff])
+        {
+            [message appendString:@"\n----------------------------------------"];
+            [message appendFormat:@"\nAmountEff:%.2lf", [transaction amountEff]];
+        }
+    }
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nCard type:%@", [transaction cardType]];
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nCard number:%@", [transaction cardNumber]];
     [message appendString:@"\n----------------------------------------"];
-    [message appendFormat:@"\nStatus:%@", [transaction status]];
+    [message appendString:@"\nStatus:"];
+    [message appendFormat:@"\n%@", [transaction stateLine1]];
+    [message appendFormat:@"\n%@", [transaction stateLine2]];
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nInvoice:%@", [transaction invoice]];
     [message appendString:@"\n----------------------------------------"];
@@ -231,13 +248,15 @@
         [message appendString:@"\n----------------------------------------"];
     }
     
-    NSString *returnButtonTitle = NULL;
-    if ([transaction canCancel])
-        returnButtonTitle = [Utility localizedStringWithKey:@"history_cancel_payment"];
-    if ([transaction canReturn])
-        returnButtonTitle = [Utility localizedStringWithKey:@"history_return_payment"];
+    NSString *reverseButtonTitle = NULL;
+    if ([transaction reverseMode] == TransactionItemReverseMode_Return ||
+        [transaction reverseMode] == TransactionItemReverseMode_ReturnPartial)
+        reverseButtonTitle = [Utility localizedStringWithKey:@"history_return_payment"];
+    else if ([transaction reverseMode] == TransactionItemReverseMode_Cancel ||
+             [transaction reverseMode] == TransactionItemReverseMode_CancelPartial)
+        reverseButtonTitle = [Utility localizedStringWithKey:@"history_cancel_payment"];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_transaction_details"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_ok"] otherButtonTitles:returnButtonTitle, NULL];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_transaction_details"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_ok"] otherButtonTitles:reverseButtonTitle, NULL];
     [alert show];
     [alert release];
 }

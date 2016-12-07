@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DRLabel.h"
 
 @interface HistoryCell : UITableViewCell
 
-@property (retain, nonatomic) IBOutlet UILabel *lblTitle;
-@property (retain, nonatomic) IBOutlet UILabel *lblAdd;
+@property (retain, nonatomic) IBOutlet DRLabel *lblTitle;
+@property (retain, nonatomic) IBOutlet DRLabel *lblAdd;
 
 @end

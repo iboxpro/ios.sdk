@@ -65,6 +65,8 @@
     
     mPaymentMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_payment"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
     [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_card"]];
+    [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_cash"]];
+    [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_prepaid"]];
     [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_recurrent"]];
     [mPaymentMenu showInView:self.view];
     [mPaymentMenu release];
@@ -80,7 +82,13 @@
     
     mReaderMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_select_reader_type"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"]  destructiveButtonTitle:NULL otherButtonTitles:NULL];
     [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chipsignbt"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chipper2x"]];
     [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chippin2"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_qpos"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
+    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_qposaudio"]];
     [mReaderMenu showInView:self.view];
     [mReaderMenu release];
 }
@@ -152,19 +160,7 @@
     {
         [[PaymentController instance] setEmail:txtEmail.text Password:txtPassword.text];
         
-        if (buttonIndex == 1)
-        {
-            PaymentContext *paymentContext = [[PaymentContext alloc] init];
-            [self updatePaymentContext:paymentContext];
-            
-            Payment *payment = [[Payment alloc] init];
-            [payment setPaymentContext:paymentContext];
-            [payment setDelegate:self];
-            [self.navigationController pushViewController:payment animated:FALSE];
-            [paymentContext release];
-            [payment release];
-        }
-        else if (buttonIndex == 2)
+        if (buttonIndex == 4)
         {
             RecurrentPaymentContext *recurrentPaymentContext = [[RecurrentPaymentContext alloc] init];
             [self updatePaymentContext:recurrentPaymentContext];
@@ -175,16 +171,67 @@
             [recurrentPaymentContext release];
             [schedule release];
         }
+        else
+        {
+            PaymentContext *paymentContext = [[PaymentContext alloc] init];
+            [self updatePaymentContext:paymentContext];
+            if (buttonIndex == 1)
+                [paymentContext setInputType:TransactionInputType_Swipe];
+            else if (buttonIndex == 2)
+                [paymentContext setInputType:TransactionInputType_Cash];
+            else if (buttonIndex == 3)
+                [paymentContext setInputType:TransactionInputType_Prepaid];
+            
+            Payment *payment = [[Payment alloc] init];
+            [payment setPaymentContext:paymentContext];
+            [payment setDelegate:self];
+            [self.navigationController pushViewController:payment animated:FALSE];
+            [paymentContext release];
+            [payment release];
+        }
     }
     else if (actionSheet == mReaderMenu)
     {
         if (buttonIndex == 1)
+        {
             [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndSign];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+        }
         else if (buttonIndex == 2)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndSignBT];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsignbt"]];
+        }
+        else if (buttonIndex == 3)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_Chipper2X];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipper2x"]];
+        }
+        else if (buttonIndex == 4)
+        {
             [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndPIN];
-        
-        NSString *strReaderType = [Utility localizedStringWithKey:buttonIndex == 1 ? @"initial_reader_type_chipsign" : @"initial_reader_type_chippin"];
-        [txtPayType setText:strReaderType];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
+        }
+        else if (buttonIndex == 5)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndPIN2];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chippin2"]];
+        }
+        else if (buttonIndex == 6)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_QPOS];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_qpos"]];
+        }
+        else if (buttonIndex == 7)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_QPOSMini];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
+        }
+        else if (buttonIndex == 8)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_QPOSAudio];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_qposaudio"]];
+        }
     }
 }
 
@@ -193,12 +240,16 @@
 {
     [Utility updateTextWithViewController:self];
     
-    [txtEmail setText:@"agent@integration.demo"];
-    [txtPassword setText:@"integration123"];
-    [txtAmount setText:@"1.4"];
+    //[txtEmail setText:@"agent@integration.demo"];
+    //[txtPassword setText:@"integration123"];
+    [txtEmail setText:@"pf@cardport.kiev"];
+    [txtPassword setText:@"triton"];
+    [txtAmount setText:@"100"];
     [txtDescription setText:@"Test payment"];
     
     [[PaymentController instance] setReaderType:PaymentControllerReaderType_ChipAndSign];
+    [[PaymentController instance] setSingleStepAuthentication:FALSE];
+    
     [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
     
     [[PaymentController instance] setRequestTimeOut:30];

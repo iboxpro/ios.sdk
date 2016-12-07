@@ -12,6 +12,9 @@
 		5C0320001B500846005D8737 /* History.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C031FFE1B500846005D8737 /* History.xib */; };
 		5C0320041B50128F005D8737 /* HistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0320021B50128F005D8737 /* HistoryCell.m */; };
 		5C0320051B50128F005D8737 /* HistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C0320031B50128F005D8737 /* HistoryCell.xib */; };
+		5C034C791D4F52670091711E /* Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C034C781D4F52670091711E /* Reverse.m */; };
+		5C034C7B1D4F52BB0091711E /* Reverse.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C034C7A1D4F52BB0091711E /* Reverse.xib */; };
+		5C034C7F1D4FA2B00091711E /* DRLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C034C7E1D4FA2B00091711E /* DRLabel.m */; };
 		5C659DBA1A8185550064893F /* AdditionalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C659DB81A8185550064893F /* AdditionalData.m */; };
 		5C659DBB1A8185550064893F /* AdditionalData.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C659DB91A8185550064893F /* AdditionalData.xib */; };
 		5C9D3BEE1A822CDA009F5112 /* PaymentResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D3BEC1A822CDA009F5112 /* PaymentResult.m */; };
@@ -51,6 +54,12 @@
 		5C0320021B50128F005D8737 /* HistoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryCell.m; path = History/HistoryCell.m; sourceTree = "<group>"; };
 		5C0320031B50128F005D8737 /* HistoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HistoryCell.xib; path = History/HistoryCell.xib; sourceTree = "<group>"; };
 		5C0320091B5018CB005D8737 /* APIHistoryResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIHistoryResult.h; sourceTree = "<group>"; };
+		5C034C721D4B78F20091711E /* BTDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTDevice.h; sourceTree = "<group>"; };
+		5C034C771D4F52670091711E /* Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reverse.h; sourceTree = "<group>"; };
+		5C034C781D4F52670091711E /* Reverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reverse.m; sourceTree = "<group>"; };
+		5C034C7A1D4F52BB0091711E /* Reverse.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Reverse.xib; sourceTree = "<group>"; };
+		5C034C7D1D4FA2B00091711E /* DRLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DRLabel.h; sourceTree = "<group>"; };
+		5C034C7E1D4FA2B00091711E /* DRLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DRLabel.m; sourceTree = "<group>"; };
 		5C659DB71A8185550064893F /* AdditionalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdditionalData.h; sourceTree = "<group>"; };
 		5C659DB81A8185550064893F /* AdditionalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdditionalData.m; sourceTree = "<group>"; };
 		5C659DB91A8185550064893F /* AdditionalData.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdditionalData.xib; sourceTree = "<group>"; };
@@ -133,6 +142,25 @@
 			name = History;
 			sourceTree = "<group>";
 		};
+		5C034C731D4F51F70091711E /* Reverse */ = {
+			isa = PBXGroup;
+			children = (
+				5C034C771D4F52670091711E /* Reverse.h */,
+				5C034C781D4F52670091711E /* Reverse.m */,
+				5C034C7A1D4F52BB0091711E /* Reverse.xib */,
+			);
+			path = Reverse;
+			sourceTree = "<group>";
+		};
+		5C034C7C1D4FA2B00091711E /* DRLabel */ = {
+			isa = PBXGroup;
+			children = (
+				5C034C7D1D4FA2B00091711E /* DRLabel.h */,
+				5C034C7E1D4FA2B00091711E /* DRLabel.m */,
+			);
+			path = DRLabel;
+			sourceTree = "<group>";
+		};
 		5CAF8F621A7FD88800AB3B25 = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +222,7 @@
 		5CAF8F951A7FDC6200AB3B25 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5C034C731D4F51F70091711E /* Reverse */,
 				5C031FFB1B50083A005D8737 /* History */,
 				5CC80B8B1A8184740059964E /* AdditionalData */,
 				5CAF8F961A7FDCBC00AB3B25 /* PaymentResult */,
@@ -253,6 +282,7 @@
 				5CE5C4621B985E5B00BF3C10 /* ReversePaymentContext.h */,
 				5CF35B821B0361E100048C07 /* RecurrentPaymentContext.h */,
 				5CC4476A1A80E8B100F71FBD /* SignatureView.h */,
+				5C034C721D4B78F20091711E /* BTDevice.h */,
 			);
 			path = SDK;
 			sourceTree = "<group>";
@@ -260,6 +290,7 @@
 		5CAF8FAC1A7FF1B900AB3B25 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				5C034C7C1D4FA2B00091711E /* DRLabel */,
 				5CE2A4CC1B973B7E00707A43 /* DRToast */,
 				5CC4D5991A9E2C0500F38B37 /* UIActionSheet+Blocks.h */,
 				5CC4D59A1A9E2C0500F38B37 /* UIActionSheet+Blocks.m */,
@@ -376,6 +407,7 @@
 				5CC447611A80D4DD00F71FBD /* Payment.xib in Resources */,
 				5C0320001B500846005D8737 /* History.xib in Resources */,
 				5C659DBB1A8185550064893F /* AdditionalData.xib in Resources */,
+				5C034C7B1D4F52BB0091711E /* Reverse.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C034C7F1D4FA2B00091711E /* DRLabel.m in Sources */,
 				5CAF8F741A7FD88800AB3B25 /* AppDelegate.m in Sources */,
 				5CC4D59B1A9E2C0500F38B37 /* UIActionSheet+Blocks.m in Sources */,
 				5CC447601A80D4DD00F71FBD /* Payment.m in Sources */,
@@ -396,6 +429,7 @@
 				5CAF8F711A7FD88800AB3B25 /* main.m in Sources */,
 				5C659DBA1A8185550064893F /* AdditionalData.m in Sources */,
 				5CE2A4D11B973B8C00707A43 /* DRToast.m in Sources */,
+				5C034C791D4F52670091711E /* Reverse.m in Sources */,
 				5C031FFF1B500846005D8737 /* History.m in Sources */,
 				5C9D3BEE1A822CDA009F5112 /* PaymentResult.m in Sources */,
 				5CE05A301B9D9899002E9E24 /* Utility.m in Sources */,
