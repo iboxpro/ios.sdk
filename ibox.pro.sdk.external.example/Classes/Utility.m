@@ -98,4 +98,32 @@
     return [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"] autorelease];
 }
 
+#pragma mark - Image
++(UIImage *)createQRWithString:(NSString *)qrString
+{
+    NSData *stringData = [qrString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [qrFilter setValue:stringData forKey:@"inputMessage"];
+    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+    
+    CIImage *qrImage = [qrFilter outputImage];
+    float scaleX = 200.0f / qrImage.extent.size.width;
+    float scaleY = 200.0f / qrImage.extent.size.height;
+    
+    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef cgImage = [context createCGImage:qrImage fromRect:[qrImage extent]];
+    UIImage *image = [[UIImage alloc] initWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+    
+    return image;
+}
+
+#pragma mark - Other methods
++(AppDelegate *)appDelegate
+{
+    return ((AppDelegate *)[[UIApplication sharedApplication] delegate]);
+}
+
 @end

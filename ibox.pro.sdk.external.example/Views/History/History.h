@@ -20,6 +20,7 @@ IBOutlet UIActivityIndicatorView *viewActivity;
 @private int mPage;
 @private NSString *mTransactionID;
 @private NSMutableArray *mData;
+@private NSArray *mInProcessTransactions;
 @private TransactionItem *mSelectedTransaction;
 @private UIAlertView *mTrIdAlert;
 }

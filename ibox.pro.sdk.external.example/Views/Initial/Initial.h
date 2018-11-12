@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ReaderScanner.h"
 #import "Payment.h"
 
-@interface Initial : UIViewController<UIActionSheetDelegate, PaymentDelegate>
+@interface Initial : UIViewController<UIActionSheetDelegate, PaymentDelegate, ReaderScannerDelegate>
 {
-IBOutlet UITextField *txtEmail;
-IBOutlet UITextField *txtPassword;
+IBOutlet UIActivityIndicatorView *viewActivity;
 IBOutlet UITextField *txtAmount;
 IBOutlet UITextField *txtDescription;
 IBOutlet UITextField *txtPayType;
@@ -30,6 +30,9 @@ IBOutlet NSLayoutConstraint *ctrDescriptionHeight;
 
 @private UIActionSheet *mReaderMenu;
 @private UIActionSheet *mPaymentMenu;
+@private UIAlertView *mLoginAlert;
+@private NSString *mEmail;
+@private NSString *mPassword;
 }
 
 -(Initial *)init;

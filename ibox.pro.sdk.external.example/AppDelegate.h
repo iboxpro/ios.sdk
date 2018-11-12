@@ -7,14 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Account.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
 @private UIWindow *mWindow;
 @private UINavigationController *mNavigationController;
+@private Account *mAccount;
 }
 
+-(void)setAccount:(Account *)account;
 -(UIWindow *)window;
+-(Account *)account;
 
 @end
 

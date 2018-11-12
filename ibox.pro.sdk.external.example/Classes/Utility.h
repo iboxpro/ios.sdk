@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 @interface Utility : NSObject
 
@@ -16,5 +17,11 @@
 +(NSString *)innerText:(NSString *)string;
 +(NSString *)localizedStringWithKey:(NSString *)key;
 +(NSLocale *)enUSPOSIXLocale;
+
+#pragma mark - Image
++(UIImage *)createQRWithString:(NSString *)qrString;
+
+#pragma mark - Other methods
++(AppDelegate *)appDelegate;
 
 @end

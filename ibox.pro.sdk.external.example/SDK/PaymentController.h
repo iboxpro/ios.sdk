@@ -4,33 +4,36 @@
 #import "RecurrentPaymentContext.h"
 #import "ReversePaymentContext.h"
 #import "TransactionData.h"
+#import "Purchase.h"
+#import "BTDevice.h"
 #import "APIResult.h"
 #import "APIHistoryResult.h"
+#import "APIAuthenticationResult.h"
 
 typedef enum
 {
-    PaymentControllerReaderType_ChipAndSign,
-    PaymentControllerReaderType_ChipAndSignBT,
-    PaymentControllerReaderType_ChipAndPIN,
-    PaymentControllerReaderType_ChipAndPIN2,
-    PaymentControllerReaderType_Chipper2X,
-    PaymentControllerReaderType_QPOS,
-    PaymentControllerReaderType_QPOSMini,
-    PaymentControllerReaderType_QPOSAudio
+    PaymentControllerReaderType_C15,
+    PaymentControllerReaderType_P15,
+    PaymentControllerReaderType_P17,
 } PaymentControllerReaderType;
 
 typedef enum
 {
     PaymentControllerErrorType_COMMON,
     PaymentControllerErrorType_CARD_INSERTED_WRONG,
+    PaymentControllerErrorType_READER_DISCONNECTED,
+    PaymentControllerErrorType_READER_TIMEOUT,
     PaymentControllerErrorType_SUBMIT,
     PaymentControllerErrorType_SUBMIT_CASH,
     PaymentControllerErrorType_SUBMIT_PREPAID,
+    PaymentControllerErrorType_SUBMIT_CREDIT,
+    PaymentControllerErrorType_SUBMIT_LINK,
     PaymentControllerErrorType_SWIPE,
     PaymentControllerErrorType_ONLINE_PROCESS,
     PaymentControllerErrorType_REVERSE,
     PaymentControllerErrorType_REVERSE_CASH,
     PaymentControllerErrorType_REVERSE_PREPAID,
+    PaymentControllerErrorType_REVERSE_CREDIT,
     PaymentControllerErrorType_SCHEDULE_STEPS,
     PaymentControllerErrorType_EMV_ERROR,
     PaymentControllerErrorType_EMV_TERMINATED,
@@ -45,12 +48,12 @@ typedef enum
 
 typedef enum
 {
-    PaymentControllerReaderEventType_Initialize,
-    PaymentControllerReaderEventType_Connect,
-    PaymentControllerReaderEventType_Disconnect,
-    PaymentControllerReaderEventType_CardInserted,
-    PaymentControllerReaderEventType_SwipeCard,
-    PaymentControllerReaderEventType_StartEMV
+    PaymentControllerReaderEventType_INITIALIZATION,
+    PaymentControllerReaderEventType_CONNECTED,
+    PaymentControllerReaderEventType_DISCONNECTED,
+    PaymentControllerReaderEventType_CARD_INSERTED,
+    PaymentControllerReaderEventType_CARD_SWIPED,
+    PaymentControllerReaderEventType_EMV_STARTED
 } PaymentControllerReaderEventType;
 
 @protocol PaymentControllerDelegate<NSObject>
@@ -69,10 +72,12 @@ typedef enum
 +(PaymentController *)instance;
 +(void)destroy;
 -(void)setPaymentContext:(PaymentContext *)paymentContext;
+-(void)setClientProductCode:(NSString *)clientProductCode;
 -(void)setDelegate:(id<PaymentControllerDelegate>)delegate;
 -(BOOL)isReaderConnected;
 -(void)setCardApplication:(int)application;
--(void)setBTDevice:(int)device;
+-(void)saveBTDevice:(BTDevice *)device;
+-(void)setBTDevice:(BTDevice *)device;
 -(void)enable;
 -(void)disable;
 -(void)retry;
@@ -80,12 +85,17 @@ typedef enum
 -(void)pingReaderWithDoneAction:(void (^)(NSDictionary *))doneAction;
 -(void)setSingleStepAuthentication:(BOOL)singleStepAuthentication;
 
+-(APIAuthenticationResult *)authentication;
 -(APIHistoryResult *)historyWithPage:(int)page;
 -(APIHistoryResult *)historyWithTransactionID:(NSString *)transactionID;
 -(APIResult *)adjustWithTrId:(NSString *)trId Signature:(NSData *)signature ReceiptEmail:(NSString *)receiptEmail ReceiptPhone:(NSString *)receiptPhone;
 -(APIResult *)adjustWithScheduleId:(NSString *)scheduleId Signature:(NSData *)signature ReceiptEmail:(NSString *)receiptEmail ReceiptPhone:(NSString *)receiptPhone;
 -(APIResult *)reverseAdjustWithTrId:(NSString *)trId Signature:(NSData *)signature ReceiptEmail:(NSString *)receiptEmail ReceiptPhone:(NSString *)receiptPhone;
+-(APIResult *)paymentStatusWithTrId:(NSString *)trId;
+-(void)paymentStatusWithTrId:(NSString *)trId DoneAction:(void (^)(APIResult *result))action;
 -(void)setEmail:(NSString *)email Password:(NSString *)password;
+-(void)search4BTReadersWithType:(PaymentControllerReaderType)readerType;
+-(void)stopSearch4BTReaders;
 -(void)setReaderType:(PaymentControllerReaderType)readerType;
 -(void)setRequestTimeOut:(double)timeOut;
 

@@ -11,9 +11,9 @@
 
 typedef enum
 {
-    TransactionDataType_Payment,
-    TransactionDataType_Schedule,
-    TransactionDataType_Reverse
+    TransactionDataType_PAYMENT,
+    TransactionDataType_SCHEDULE,
+    TransactionDataType_REVERSE
 } TransactionDataType;
 
 @interface TransactionData : NSObject
@@ -23,7 +23,7 @@ typedef enum
 @property (nonatomic, assign) BOOL RequiredSignature;
 @property (nonatomic, retain) NSString *ID;
 @property (nonatomic, retain) NSString *Invoice;
-@property (nonatomic, retain) NSString *CardNumber;
+@property (nonatomic, retain) Card *Card;
 @property (nonatomic, retain) TransactionItem *Transaction;
 
 @end

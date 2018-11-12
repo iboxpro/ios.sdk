@@ -53,12 +53,12 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         APIResult *result = NULL;
-        if ([mTransactionData Type] == TransactionDataType_Payment)
-            result = [[PaymentController instance] adjustWithTrId:mTransactionData.ID Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
-        else if ([mTransactionData Type] == TransactionDataType_Schedule)
-            result = [[PaymentController instance] adjustWithScheduleId:mTransactionData.ID Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
-        else if ([mTransactionData Type] == TransactionDataType_Reverse)
-            result = [[PaymentController instance] reverseAdjustWithTrId:mTransactionData.ID Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
+        if ([mTransactionData Type] == TransactionDataType_PAYMENT)
+            result = [[PaymentController instance] adjustWithTrId:[mTransactionData ID] Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
+        else if ([mTransactionData Type] == TransactionDataType_SCHEDULE)
+            result = [[PaymentController instance] adjustWithScheduleId:[mTransactionData ID] Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
+        else if ([mTransactionData Type] == TransactionDataType_REVERSE)
+            result = [[PaymentController instance] reverseAdjustWithTrId:[mTransactionData ID] Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
         dispatch_sync(dispatch_get_main_queue(), ^{
             [indicator stopAnimating];
             [indicator release];

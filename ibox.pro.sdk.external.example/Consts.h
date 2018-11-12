@@ -15,7 +15,7 @@
 #define CONSTS_CURRENCY_ID_VND                                  @"VND"
 
 // keys
-#define CONSTS_KEY_BTREADER_ID                                  @"key_btreader_id"
+#define CONSTS_KEY_BT_READER                                    @"keyBTReader"
 #define CONSTS_KEY_READER_CONNECTED                             @"connected"
 #define CONSTS_KEY_READER_CHARGE                                @"charge"
 

@@ -14,6 +14,7 @@
 "common_no_description" = "no description";
 "common_retry" = "Retry";
 "common_continue" = "Continue";
+"common_copy_to_clipboard" = "Сopy to clipboard";
 
 /* Initial */
 "initial_ping" = "Ping";
@@ -24,26 +25,27 @@
 "initial_payment_type_card" = "Card payment";
 "initial_payment_type_cash" = "Cash payment";
 "initial_payment_type_prepaid" = "Prepaid";
+"initial_payment_type_credit" = "Credit";
+"initial_payment_type_link" = "Link";
 "initial_payment_type_recurrent" = "Recurrent payment";
 "initial_product_payment" = "Product";
 "initial_product_field_hint" = "Product field";
+"initial_purchase" = "Purchase";
 "initial_select_reader_type" = "Select reader type";
-"initial_reader_type_chipsign" = "Chip&Sign";
-"initial_reader_type_chipsignbt" = "Chip&SignBT";
-"initial_reader_type_chipper2x" = "Chipper2X";
-"initial_reader_type_chippin" = "Chip@PIN";
-"initial_reader_type_chippin2" = "Chip@PIN2";
-"initial_reader_type_qpos" = "QPOS";
-"initial_reader_type_qposmini" = "QPOSMini";
-"initial_reader_type_qposaudio" = "QPOSAudio";
+"initial_reader_type_chipsign" = "C15";
+"initial_reader_type_chippin" = "P15";
+"initial_reader_type_qposmini" = "P17";
+"initial_authorization" = "Authorization";
 
 /* History */
 "history_title" = "History";
 "history_transaction" = "Transaction";
+"history_transactions" = "Transactions";
+"history_transactions_in_process" = "Transactions in process";
 "history_input_transaction_id" = "Enter transaction ID";
 "history_transaction_details" = "Transaction details";
-"history_cancel_payment" = "Cancel payment";
-"history_return_payment" = "Return payment";
+"history_cancel_payment" = "Cancel";
+"history_return_payment" = "Return";
 
 /* Reverse */
 "reverse_amount" = "Reverse amount";
@@ -72,6 +74,8 @@
 "payment_reader_connect" = "Connect reader";
 "payment_swipe_insert" = "Insert card or swipe";
 "payment_swipe" = "Swipe card";
+"payment_error_reader_disconnected" = "Reader disconnected";
+"payment_error_reader_timeout" = "Reader timeout";
 "payment_error_zero_transaction" = "Zerro amount";
 "payment_error_reverse" = "Cancelation error";
 "payment_card_error" = "Card error";
@@ -81,3 +85,26 @@
 
 /* AdditionalData */
 "additional_data_signature" = "Signature";
+
+/* LinkPayment */
+"link_payment_send_link" = "Send link";
+"link_payment_new_payment" = "New payment";
+
+/* PaymentResult */
+"payment_result_bank_name" = "Bank";
+"payment_result_client_name" = "Company name";
+"payment_result_client_legal_name" = "Company legal name";
+"payment_result_client_phone" = "Company phone";
+"payment_result_client_web" = "Company site";
+"payment_result_transaction_date" = "Transaction date";
+"payment_result_transaction_terminal_name" = "Terminal";
+"payment_result_transaction_invoice" = "Invoice";
+"payment_result_transaction_approval_code" = "Approval code";
+"payment_result_transaction_iin_and_pan" = "Card number & type";
+"payment_result_transaction_emv_data" = "EMV data";
+"payment_result_transaction_operation" = "Operation";
+"payment_result_transaction_amount" = "Ammount";
+"payment_result_transaction_tax" = "Tax";
+"payment_result_transaction_state" = "State";
+"payment_result_client_signature" = "Client signature__________________";
+"payment_result_client_pin" = "Was entered PIN";

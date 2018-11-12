@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49683F701C0EECA300CF6CA3 /* libibox.pro.sdk.external.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */; };
+		49BDE7691F34B0F400D1DECA /* libibox.pro.sdk.external.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */; };
 		5C031FFF1B500846005D8737 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C031FFD1B500846005D8737 /* History.m */; };
 		5C0320001B500846005D8737 /* History.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C031FFE1B500846005D8737 /* History.xib */; };
 		5C0320041B50128F005D8737 /* HistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C0320021B50128F005D8737 /* HistoryCell.m */; };
@@ -17,6 +17,10 @@
 		5C034C7F1D4FA2B00091711E /* DRLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C034C7E1D4FA2B00091711E /* DRLabel.m */; };
 		5C659DBA1A8185550064893F /* AdditionalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C659DB81A8185550064893F /* AdditionalData.m */; };
 		5C659DBB1A8185550064893F /* AdditionalData.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C659DB91A8185550064893F /* AdditionalData.xib */; };
+		5C7463C51E8E691F0091E22D /* ReaderScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7463C31E8E691F0091E22D /* ReaderScanner.m */; };
+		5C7463C61E8E691F0091E22D /* ReaderScanner.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C7463C41E8E691F0091E22D /* ReaderScanner.xib */; };
+		5C7463CA1E8E6A160091E22D /* ReaderScannerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C7463C81E8E6A160091E22D /* ReaderScannerCell.m */; };
+		5C7463CB1E8E6A160091E22D /* ReaderScannerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C7463C91E8E6A160091E22D /* ReaderScannerCell.xib */; };
 		5C9D3BEE1A822CDA009F5112 /* PaymentResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9D3BEC1A822CDA009F5112 /* PaymentResult.m */; };
 		5C9D3BEF1A822CDA009F5112 /* PaymentResult.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C9D3BED1A822CDA009F5112 /* PaymentResult.xib */; };
 		5CAF8F711A7FD88800AB3B25 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CAF8F701A7FD88800AB3B25 /* main.m */; };
@@ -33,6 +37,8 @@
 		5CC447791A80EA9A00F71FBD /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC447781A80EA9A00F71FBD /* GLKit.framework */; };
 		5CC4477B1A80EAA600F71FBD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC4477A1A80EAA600F71FBD /* AVFoundation.framework */; };
 		5CC4D59B1A9E2C0500F38B37 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC4D59A1A9E2C0500F38B37 /* UIActionSheet+Blocks.m */; };
+		5CD853421F7A94EB000B8C04 /* LinkPayment.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CD853401F7A94EB000B8C04 /* LinkPayment.m */; };
+		5CD853431F7A94EB000B8C04 /* LinkPayment.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CD853411F7A94EB000B8C04 /* LinkPayment.xib */; };
 		5CE05A251B9D9632002E9E24 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5CE05A271B9D9632002E9E24 /* Localizable.strings */; };
 		5CE05A2D1B9D979A002E9E24 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CE05A2C1B9D979A002E9E24 /* LaunchScreen.xib */; };
 		5CE05A301B9D9899002E9E24 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CE05A2F1B9D9899002E9E24 /* Utility.m */; };
@@ -60,14 +66,27 @@
 		5C034C7A1D4F52BB0091711E /* Reverse.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Reverse.xib; sourceTree = "<group>"; };
 		5C034C7D1D4FA2B00091711E /* DRLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DRLabel.h; sourceTree = "<group>"; };
 		5C034C7E1D4FA2B00091711E /* DRLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DRLabel.m; sourceTree = "<group>"; };
+		5C1AAE7B1F9E1B7C002E4003 /* Card.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Card.h; sourceTree = "<group>"; };
+		5C2915A81F7D1B3A0092351B /* QRData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRData.h; sourceTree = "<group>"; };
+		5C5DA16F1F4D7F4000F37815 /* Account.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Account.h; sourceTree = "<group>"; };
 		5C659DB71A8185550064893F /* AdditionalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdditionalData.h; sourceTree = "<group>"; };
 		5C659DB81A8185550064893F /* AdditionalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdditionalData.m; sourceTree = "<group>"; };
 		5C659DB91A8185550064893F /* AdditionalData.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdditionalData.xib; sourceTree = "<group>"; };
+		5C7463C21E8E691F0091E22D /* ReaderScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderScanner.h; sourceTree = "<group>"; };
+		5C7463C31E8E691F0091E22D /* ReaderScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderScanner.m; sourceTree = "<group>"; };
+		5C7463C41E8E691F0091E22D /* ReaderScanner.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReaderScanner.xib; sourceTree = "<group>"; };
+		5C7463C71E8E6A160091E22D /* ReaderScannerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderScannerCell.h; sourceTree = "<group>"; };
+		5C7463C81E8E6A160091E22D /* ReaderScannerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderScannerCell.m; sourceTree = "<group>"; };
+		5C7463C91E8E6A160091E22D /* ReaderScannerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReaderScannerCell.xib; sourceTree = "<group>"; };
 		5C8B50291B53BDEE00CF4FBC /* TransactionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionItem.h; sourceTree = "<group>"; };
 		5C8B502A1B53BE2200CF4FBC /* TransactionProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionProduct.h; sourceTree = "<group>"; };
+		5C9BC723200614850000220B /* Acquirer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acquirer.h; sourceTree = "<group>"; };
+		5C9BC724200614B20000220B /* APIAuthenticationResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIAuthenticationResult.h; sourceTree = "<group>"; };
+		5C9BC728200623DD0000220B /* PaymentOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentOption.h; sourceTree = "<group>"; };
 		5C9D3BEB1A822CDA009F5112 /* PaymentResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentResult.h; sourceTree = "<group>"; };
 		5C9D3BEC1A822CDA009F5112 /* PaymentResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentResult.m; sourceTree = "<group>"; };
 		5C9D3BED1A822CDA009F5112 /* PaymentResult.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentResult.xib; sourceTree = "<group>"; };
+		5CA31BEE1F4C7A3E0002E9FA /* Purchase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Purchase.h; sourceTree = "<group>"; };
 		5CAF8F6B1A7FD88800AB3B25 /* ibox.pro.sdk.external.example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ibox.pro.sdk.external.example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CAF8F6F1A7FD88800AB3B25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5CAF8F701A7FD88800AB3B25 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -93,6 +112,10 @@
 		5CC4D59A1A9E2C0500F38B37 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		5CC946221A94867600E1CF94 /* PaymentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentController.h; sourceTree = "<group>"; };
 		5CC946231A94873900E1CF94 /* TransactionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionData.h; sourceTree = "<group>"; };
+		5CD8533F1F7A94EB000B8C04 /* LinkPayment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkPayment.h; sourceTree = "<group>"; };
+		5CD853401F7A94EB000B8C04 /* LinkPayment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LinkPayment.m; sourceTree = "<group>"; };
+		5CD853411F7A94EB000B8C04 /* LinkPayment.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LinkPayment.xib; sourceTree = "<group>"; };
+		5CD853471F7A9A8F000B8C04 /* ExternalPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExternalPayment.h; sourceTree = "<group>"; };
 		5CE05A261B9D9632002E9E24 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5CE05A281B9D964F002E9E24 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5CE05A2C1B9D979A002E9E24 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
@@ -116,7 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49683F701C0EECA300CF6CA3 /* libibox.pro.sdk.external.a in Frameworks */,
+				49BDE7691F34B0F400D1DECA /* libibox.pro.sdk.external.a in Frameworks */,
 				5CC4477B1A80EAA600F71FBD /* AVFoundation.framework in Frameworks */,
 				5CC447791A80EA9A00F71FBD /* GLKit.framework in Frameworks */,
 				5CC447771A80EA9100F71FBD /* CoreLocation.framework in Frameworks */,
@@ -159,6 +182,19 @@
 				5C034C7E1D4FA2B00091711E /* DRLabel.m */,
 			);
 			path = DRLabel;
+			sourceTree = "<group>";
+		};
+		5C7463C11E8E68ED0091E22D /* ReaderScanner */ = {
+			isa = PBXGroup;
+			children = (
+				5C7463C21E8E691F0091E22D /* ReaderScanner.h */,
+				5C7463C31E8E691F0091E22D /* ReaderScanner.m */,
+				5C7463C41E8E691F0091E22D /* ReaderScanner.xib */,
+				5C7463C71E8E6A160091E22D /* ReaderScannerCell.h */,
+				5C7463C81E8E6A160091E22D /* ReaderScannerCell.m */,
+				5C7463C91E8E6A160091E22D /* ReaderScannerCell.xib */,
+			);
+			path = ReaderScanner;
 			sourceTree = "<group>";
 		};
 		5CAF8F621A7FD88800AB3B25 = {
@@ -228,6 +264,8 @@
 				5CAF8F961A7FDCBC00AB3B25 /* PaymentResult */,
 				5CAF8F991A7FDCBC00AB3B25 /* Payment */,
 				5CE40C821B04D4F800B9196D /* Schedule */,
+				5CD8533E1F7A94B9000B8C04 /* LinkPayment */,
+				5C7463C11E8E68ED0091E22D /* ReaderScanner */,
 				5CAF8F9A1A7FDCBC00AB3B25 /* Initial */,
 			);
 			path = Views;
@@ -269,10 +307,17 @@
 			isa = PBXGroup;
 			children = (
 				49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */,
+				5C9BC724200614B20000220B /* APIAuthenticationResult.h */,
+				5C5DA16F1F4D7F4000F37815 /* Account.h */,
+				5C9BC728200623DD0000220B /* PaymentOption.h */,
+				5C9BC723200614850000220B /* Acquirer.h */,
 				5C007E341B55510F00BC100C /* DescriptionProduct.h */,
 				5C007E351B55510F00BC100C /* DescriptionProductField.h */,
 				5C8B502A1B53BE2200CF4FBC /* TransactionProduct.h */,
 				5C8B50291B53BDEE00CF4FBC /* TransactionItem.h */,
+				5C1AAE7B1F9E1B7C002E4003 /* Card.h */,
+				5CD853471F7A9A8F000B8C04 /* ExternalPayment.h */,
+				5C2915A81F7D1B3A0092351B /* QRData.h */,
 				5C0320091B5018CB005D8737 /* APIHistoryResult.h */,
 				496E6FC11A9757BD00750961 /* APIResult.h */,
 				5CC946221A94867600E1CF94 /* PaymentController.h */,
@@ -283,6 +328,7 @@
 				5CF35B821B0361E100048C07 /* RecurrentPaymentContext.h */,
 				5CC4476A1A80E8B100F71FBD /* SignatureView.h */,
 				5C034C721D4B78F20091711E /* BTDevice.h */,
+				5CA31BEE1F4C7A3E0002E9FA /* Purchase.h */,
 			);
 			path = SDK;
 			sourceTree = "<group>";
@@ -315,6 +361,16 @@
 				5C659DB91A8185550064893F /* AdditionalData.xib */,
 			);
 			path = AdditionalData;
+			sourceTree = "<group>";
+		};
+		5CD8533E1F7A94B9000B8C04 /* LinkPayment */ = {
+			isa = PBXGroup;
+			children = (
+				5CD8533F1F7A94EB000B8C04 /* LinkPayment.h */,
+				5CD853401F7A94EB000B8C04 /* LinkPayment.m */,
+				5CD853411F7A94EB000B8C04 /* LinkPayment.xib */,
+			);
+			path = LinkPayment;
 			sourceTree = "<group>";
 		};
 		5CE2A4CC1B973B7E00707A43 /* DRToast */ = {
@@ -397,6 +453,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C7463CB1E8E6A160091E22D /* ReaderScannerCell.xib in Resources */,
 				5CE05A2D1B9D979A002E9E24 /* LaunchScreen.xib in Resources */,
 				5C0320051B50128F005D8737 /* HistoryCell.xib in Resources */,
 				5CAF8F7C1A7FD88800AB3B25 /* Images.xcassets in Resources */,
@@ -408,6 +465,8 @@
 				5C0320001B500846005D8737 /* History.xib in Resources */,
 				5C659DBB1A8185550064893F /* AdditionalData.xib in Resources */,
 				5C034C7B1D4F52BB0091711E /* Reverse.xib in Resources */,
+				5CD853431F7A94EB000B8C04 /* LinkPayment.xib in Resources */,
+				5C7463C61E8E691F0091E22D /* ReaderScanner.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +484,9 @@
 				5CE2A4D21B973B8C00707A43 /* DRToastManager.m in Sources */,
 				5CE40C861B04D50F00B9196D /* Schedule.m in Sources */,
 				5CC4475B1A80D4CC00F71FBD /* Initial.m in Sources */,
+				5C7463CA1E8E6A160091E22D /* ReaderScannerCell.m in Sources */,
+				5CD853421F7A94EB000B8C04 /* LinkPayment.m in Sources */,
+				5C7463C51E8E691F0091E22D /* ReaderScanner.m in Sources */,
 				5C0320041B50128F005D8737 /* HistoryCell.m in Sources */,
 				5CAF8F711A7FD88800AB3B25 /* main.m in Sources */,
 				5C659DBA1A8185550064893F /* AdditionalData.m in Sources */,

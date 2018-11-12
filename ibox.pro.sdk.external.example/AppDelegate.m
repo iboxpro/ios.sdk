@@ -30,6 +30,8 @@
     [[UIApplication sharedApplication] setStatusBarHidden:FALSE];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
+    [self setAccount:NULL];
+    
     return TRUE;
 }
 
@@ -53,10 +55,26 @@
 {
 }
 
+#pragma mark - Public methods
+-(void)setAccount:(Account *)account
+{
+    if (mAccount != account)
+    {
+        if (mAccount)
+            [mAccount release];
+        [account retain];
+        mAccount = account;
+    }
+}
+
 -(UIWindow *)window
 {
     return mWindow;
 }
 
+-(Account *)account
+{
+    return mAccount;
+}
 
 @end

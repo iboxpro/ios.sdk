@@ -10,6 +10,7 @@
 
 @interface APIHistoryResult : APIResult
 
+-(NSArray *)inProcessTransactions;
 -(NSArray *)transactions;
 
 @end

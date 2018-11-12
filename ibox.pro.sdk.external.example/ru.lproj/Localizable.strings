@@ -14,6 +14,7 @@
 "common_no_description" = "Описание отсутствует";
 "common_retry" = "Повтроить";
 "common_continue" = "Продолжить";
+"common_copy_to_clipboard" = "Скопировано в буфер обмена";
 
 /* Initial */
 "initial_ping" = "Проверить ридер";
@@ -24,26 +25,27 @@
 "initial_payment_type_card" = "Банковской картой";
 "initial_payment_type_cash" = "Наличными";
 "initial_payment_type_prepaid" = "Предоплата";
+"initial_payment_type_credit" = "Постоплата";
+"initial_payment_type_link" = "Ссылка";
 "initial_payment_type_recurrent" = "Рекуррентный платеж";
 "initial_product_payment" = "Продукт";
 "initial_product_field_hint" = "Product field";
+"initial_purchase" = "Покупка";
 "initial_select_reader_type" = "Выберите тип ридера";
-"initial_reader_type_chipsign" = "Chip&Sign";
-"initial_reader_type_chipsignbt" = "Chip&SignBT";
-"initial_reader_type_chipper2x" = "Chipper2X";
-"initial_reader_type_chippin" = "Chip@PIN";
-"initial_reader_type_chippin2" = "Chip@PIN2";
-"initial_reader_type_qpos" = "QPOS";
-"initial_reader_type_qposmini" = "QPOSMini";
-"initial_reader_type_qposaudio" = "QPOSAudio";
+"initial_reader_type_chipsign" = "C15";
+"initial_reader_type_chippin" = "P15";
+"initial_reader_type_qposmini" = "P17";
+"initial_authorization" = "Авторизация";
 
 /* History */
 "history_title" = "История";
 "history_transaction" = "Транзакция";
+"history_transactions" = "Транзакции";
+"history_transactions_in_process" = "Транзакции в обработке";
 "history_input_transaction_id" = "Введите Transaction ID";
 "history_transaction_details" = "Подробно о транзакции";
-"history_cancel_payment" = "Отмениить платеж";
-"history_return_payment" = "Возврат платежа";
+"history_cancel_payment" = "Отмениить";
+"history_return_payment" = "Возврат";
 
 /* Reverse */
 "reverse_amount" = "Сумма отмены";
@@ -72,6 +74,8 @@
 "payment_reader_connect" = "Подключите ридер";
 "payment_swipe_insert" = "Вставьте карту или проведите магнитной полосой";
 "payment_swipe" = "Проведите магнитной полосой";
+"payment_error_reader_disconnected" = "Ридер одключен";
+"payment_error_reader_timeout" = "Таймаут ридера";
 "payment_error_zero_transaction" = "Сумма должна быть больше нуля";
 "payment_error_reverse" = "Ошибка проведения отмены платежа";
 "payment_card_error" = "Ошибка карты";
@@ -81,3 +85,26 @@
 
 /* AdditionalData */
 "additional_data_signature" = "Подпись";
+
+/* LinkPayment */
+"link_payment_send_link" = "Отправить ссылку";
+"link_payment_new_payment" = "Новый платеж";
+
+/* PaymentResult */
+"payment_result_bank_name" = "Банк";
+"payment_result_client_name" = "Название компании";
+"payment_result_client_legal_name" = "Название юридического лица";
+"payment_result_client_phone" = "Телефон компании";
+"payment_result_client_web" = "WEB-сайт компании";
+"payment_result_transaction_date" = "Дата и время операции";
+"payment_result_transaction_terminal_name" = "Номер терминала";
+"payment_result_transaction_invoice" = "Номер чека";
+"payment_result_transaction_approval_code" = "Код подтверждения";
+"payment_result_transaction_iin_and_pan" = "Номер и тип карты";
+"payment_result_transaction_emv_data" = "EMV тэги транзакции";
+"payment_result_transaction_operation" = "Тип операции";
+"payment_result_transaction_amount" = "Сумма операции";
+"payment_result_transaction_tax" = "Комиссия";
+"payment_result_transaction_state" = "Статус";
+"payment_result_client_signature" = "Подпись клиента___________________";
+"payment_result_client_pin" = "Подтверждено вводом PIN";

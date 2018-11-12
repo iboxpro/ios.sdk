@@ -43,8 +43,8 @@
     
     [txtAmount setText:[NSString stringWithFormat:@"Amount:%.2lf p.", [mTransaction amountEff]]];
     
-    if ([mTransaction reverseMode] == TransactionItemReverseMode_CancelPartial ||
-        [mTransaction reverseMode] == TransactionItemReverseMode_ReturnPartial)
+    if ([mTransaction reverseMode] == TransactionReverseMode_CANCEL_PARTIAL ||
+        [mTransaction reverseMode] == TransactionReverseMode_RETURN_PARTIAL)
     {
         [txtReverse setText:[NSString stringWithFormat:@"%.2lf", [mTransaction amountEff]]];
         [txtReverse setUserInteractionEnabled:TRUE];

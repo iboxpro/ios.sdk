@@ -44,6 +44,10 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self setTrnsactionID:NULL];
+    [self setInProcessTransactions:NULL];
+    
     [self updateControls];
     [self updateHistory];
 }
@@ -97,12 +101,43 @@
 #pragma mark - Table view source
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    int sectionsCount = 1;
+    if (mInProcessTransactions && [mInProcessTransactions count])
+        sectionsCount += 1;
+    return sectionsCount;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (mInProcessTransactions && [mInProcessTransactions count])
+    {
+        if (section == 0)
+            return [Utility localizedStringWithKey:@"history_transactions_in_process"];
+        else
+            return [Utility localizedStringWithKey:@"history_transactions"];
+    }
+    else
+        return [Utility localizedStringWithKey:@"history_transactions"];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [mData count];
+    int rowsCount = 0;
+    if (mInProcessTransactions && [mInProcessTransactions count])
+    {
+        if (section == 0)
+            rowsCount = (int)[mInProcessTransactions count];
+        else
+            rowsCount = (int)[mData count];
+    }
+    else
+        rowsCount = (int)[mData count];
+    return rowsCount;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 44.0f;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,7 +162,16 @@
         }
     }
     
-    TransactionItem *transaction = [mData objectAtIndex:(int)indexPath.row];
+    TransactionItem *transaction = NULL;
+    if (mInProcessTransactions && [mInProcessTransactions count])
+    {
+        if (indexPath.section == 0)
+            transaction = [mInProcessTransactions objectAtIndex:(int)indexPath.row];
+        else
+            transaction = [mData objectAtIndex:(int)indexPath.row];
+    }
+    else
+        transaction = [mData objectAtIndex:(int)indexPath.row];
     
     [cell.lblTitle setText:([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
     
@@ -136,13 +180,13 @@
     UIColor *color = NULL;
     BOOL strikethrough = FALSE;
     
-    if ([transaction displayMode] == TransactionItemDisplayMode_Success)
+    if ([transaction displayMode] == TransactionItemDisplayMode_SUICCESS)
         color = [UIColor blackColor];
-    else if ([transaction displayMode] == TransactionItemDisplayMode_Declined)
+    else if ([transaction displayMode] == TransactionItemDisplayMode_DECLINED)
         color = [UIColor redColor];
-    else if ([transaction displayMode] == TransactionItemDisplayMode_Reverse)
+    else if ([transaction displayMode] == TransactionItemDisplayMode_REVERSE)
         color = [UIColor grayColor];
-    else if ([transaction displayMode] == TransactionItemDisplayMode_Reversed)
+    else if ([transaction displayMode] == TransactionItemDisplayMode_REVERSED)
     {
         color = [UIColor grayColor];
         strikethrough = TRUE;
@@ -174,8 +218,24 @@
 #pragma mark - Table view delegate
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TransactionItem *transaction = [mData objectAtIndex:(int)indexPath.row];
+    TransactionItem *transaction = NULL;
+    if (mInProcessTransactions && [mInProcessTransactions count])
+    {
+        if (indexPath.section == 0)
+            transaction = [mInProcessTransactions objectAtIndex:(int)indexPath.row];
+        else
+            transaction = [mData objectAtIndex:(int)indexPath.row];
+    }
+    else
+        transaction = [mData objectAtIndex:(int)indexPath.row];
     mSelectedTransaction = transaction;
+    
+    Card *card = [transaction card];
+    
+    Acquirer *acquirer = NULL;
+    NSString *acquirerID = [transaction acquirerID];
+    if (acquirerID && ![acquirerID isEqualToString:@""])
+        acquirer = [[[Utility appDelegate] account] acquirerWithCode:acquirerID];
     
     NSMutableString *message = [[NSMutableString alloc] init];
     [message appendFormat:@"Transaction ID:%@", [transaction ID]];
@@ -185,7 +245,7 @@
     [message appendFormat:@"\nDescription:%@", ([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
     [message appendString:@"\n----------------------------------------"];
     [message appendFormat:@"\nAmount:%.2lf", [transaction amount]];
-    if ([transaction displayMode] == TransactionItemDisplayMode_Reversed)
+    if ([transaction displayMode] == TransactionItemDisplayMode_REVERSED)
     {
         if ([transaction amountEff])
         {
@@ -193,10 +253,26 @@
             [message appendFormat:@"\nAmountEff:%.2lf", [transaction amountEff]];
         }
     }
+    
     [message appendString:@"\n----------------------------------------"];
-    [message appendFormat:@"\nCard type:%@", [transaction cardType]];
-    [message appendString:@"\n----------------------------------------"];
-    [message appendFormat:@"\nCard number:%@", [transaction cardNumber]];
+    [message appendFormat:@"\nCard type:%@", [card iin]];
+    
+    if ([transaction inputType] == TransactionInputType_SWIPE ||
+        [transaction inputType] == TransactionInputType_EMV ||
+        [transaction inputType] == TransactionInputType_NFC)
+    {
+        [message appendString:@"\n----------------------------------------"];
+        [message appendFormat:@"\nCard number:%@", [card panMasked]];
+    }
+    else if ([transaction inputType] == TransactionInputType_LINK)
+    {
+        if (acquirer)
+        {
+            [message appendString:@"\n----------------------------------------"];
+            [message appendFormat:@"\nAcquirer name:%@", [acquirer name]];
+        }
+    }
+    
     [message appendString:@"\n----------------------------------------"];
     [message appendString:@"\nStatus:"];
     [message appendFormat:@"\n%@", [transaction stateLine1]];
@@ -248,17 +324,18 @@
         [message appendString:@"\n----------------------------------------"];
     }
     
+    [card release];
+    
     NSString *reverseButtonTitle = NULL;
-    if ([transaction reverseMode] == TransactionItemReverseMode_Return ||
-        [transaction reverseMode] == TransactionItemReverseMode_ReturnPartial)
+    if ([transaction reverseMode] == TransactionReverseMode_RETURN ||
+        [transaction reverseMode] == TransactionReverseMode_RETURN_PARTIAL)
         reverseButtonTitle = [Utility localizedStringWithKey:@"history_return_payment"];
-    else if ([transaction reverseMode] == TransactionItemReverseMode_Cancel ||
-             [transaction reverseMode] == TransactionItemReverseMode_CancelPartial)
+    else if ([transaction reverseMode] == TransactionReverseMode_CANCEL ||
+             [transaction reverseMode] == TransactionReverseMode_CANCEL_PARTIAL)
         reverseButtonTitle = [Utility localizedStringWithKey:@"history_cancel_payment"];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_transaction_details"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_ok"] otherButtonTitles:reverseButtonTitle, NULL];
     [alert show];
-    [alert release];
 }
 
 #pragma mark - Scroll view delegate
@@ -307,6 +384,17 @@
     }
 }
 
+-(void)setInProcessTransactions:(NSArray *)transactions
+{
+    if (mInProcessTransactions != transactions)
+    {
+        if (mInProcessTransactions)
+            [mInProcessTransactions release];
+        [transactions retain];
+        mInProcessTransactions = transactions;
+    }
+}
+
 #pragma mark - Public methods
 -(void)updateHistory
 {
@@ -330,6 +418,10 @@
             {
                 if ([result valid] && ![result errorCode])
                 {
+                    NSArray *inProcessTransactions = [result inProcessTransactions];
+                    [self setInProcessTransactions:inProcessTransactions];
+                    [inProcessTransactions release];
+                    
                     if (mTransactionID)
                     {
                         mPage = -1;
@@ -358,6 +450,5 @@
         });
     });
 }
-
 
 @end
