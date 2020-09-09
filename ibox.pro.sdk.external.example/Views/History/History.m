@@ -63,39 +63,24 @@
     if (![viewActivity isHidden])
         return;
     
-    mTrIdAlert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_input_transaction_id"] message:NULL delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:[Utility localizedStringWithKey:@"common_ok"], NULL];
-    [mTrIdAlert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [mTrIdAlert show];
-    
-    UITextField *textfield = [mTrIdAlert textFieldAtIndex:0];
-    [textfield setText:@"C2CDB704-9E8F-4572-8F07-D5B4D60A90E7"];
-}
-
-#pragma mark - UIAlertViewDelegate
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    int index = (int)buttonIndex;
-    if (index)
-    {
-        if (alertView == mTrIdAlert)
-        {
-            mPage = 0;
-            [mData removeAllObjects];
-            [TableView reloadData];
-            
-            UITextField *textfield = [mTrIdAlert textFieldAtIndex:0];
-            NSString *trnsactionID = [textfield text];
-            [self setTrnsactionID:trnsactionID];
-            [self updateHistory];
-        }
-        else
-        {
-            Reverse *reverse = [[Reverse alloc] init];
-            [reverse setTransaction:mSelectedTransaction];
-            [self.navigationController pushViewController:reverse animated:TRUE];
-            [reverse release];
-        }
-    }
+    UIAlertController *trIdAlert = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"history_input_transaction_id"] message:NULL preferredStyle:UIAlertControllerStyleAlert];
+    [trIdAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        [textField setPlaceholder:@"Transaction"];
+        [textField setKeyboardType:UIKeyboardTypeDefault];
+    }];
+    [[[trIdAlert textFields] objectAtIndex:0] setText:@"C2CDB704-9E8F-4572-8F07-D5B4D60A90E7"];
+    [trIdAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
+    [trIdAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        mPage = 0;
+        [mData removeAllObjects];
+        [TableView reloadData];
+        
+        UITextField *textfield = [[trIdAlert textFields] objectAtIndex:0];
+        NSString *trnsactionID = [textfield text];
+        [self setTrnsactionID:trnsactionID];
+        [self updateHistory];
+    }]];
+    [self presentViewController:trIdAlert animated:TRUE completion:NULL];
 }
 
 #pragma mark - Table view source
@@ -180,7 +165,7 @@
     UIColor *color = NULL;
     BOOL strikethrough = FALSE;
     
-    if ([transaction displayMode] == TransactionItemDisplayMode_SUICCESS)
+    if ([transaction displayMode] == TransactionItemDisplayMode_SUCCESS)
         color = [UIColor blackColor];
     else if ([transaction displayMode] == TransactionItemDisplayMode_DECLINED)
         color = [UIColor redColor];
@@ -218,6 +203,8 @@
 #pragma mark - Table view delegate
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    Account *account = [[Utility appDelegate] account];
+    
     TransactionItem *transaction = NULL;
     if (mInProcessTransactions && [mInProcessTransactions count])
     {
@@ -239,29 +226,29 @@
     
     NSMutableString *message = [[NSMutableString alloc] init];
     [message appendFormat:@"Transaction ID:%@", [transaction ID]];
-    [message appendString:@"\n----------------------------------------"];
+    [message appendString:@"\n---------------------------------------"];
     [message appendFormat:@"\nDate:%@", [transaction date]];
-    [message appendString:@"\n----------------------------------------"];
+    [message appendString:@"\n---------------------------------------"];
     [message appendFormat:@"\nDescription:%@", ([transaction descriptionOfTransaction] && ![[transaction descriptionOfTransaction] isEqualToString:@""]) ? [transaction descriptionOfTransaction] : [Utility localizedStringWithKey:@"common_no_description"]];
-    [message appendString:@"\n----------------------------------------"];
+    [message appendString:@"\n---------------------------------------"];
     [message appendFormat:@"\nAmount:%.2lf", [transaction amount]];
     if ([transaction displayMode] == TransactionItemDisplayMode_REVERSED)
     {
         if ([transaction amountEff])
         {
-            [message appendString:@"\n----------------------------------------"];
+            [message appendString:@"\n---------------------------------------"];
             [message appendFormat:@"\nAmountEff:%.2lf", [transaction amountEff]];
         }
     }
     
-    [message appendString:@"\n----------------------------------------"];
+    [message appendString:@"\n---------------------------------------"];
     [message appendFormat:@"\nCard type:%@", [card iin]];
     
     if ([transaction inputType] == TransactionInputType_SWIPE ||
         [transaction inputType] == TransactionInputType_EMV ||
         [transaction inputType] == TransactionInputType_NFC)
     {
-        [message appendString:@"\n----------------------------------------"];
+        [message appendString:@"\n---------------------------------------"];
         [message appendFormat:@"\nCard number:%@", [card panMasked]];
     }
     else if ([transaction inputType] == TransactionInputType_LINK)
@@ -273,16 +260,47 @@
         }
     }
     
-    [message appendString:@"\n----------------------------------------"];
+    [message appendString:@"\n---------------------------------------"];
     [message appendString:@"\nStatus:"];
     [message appendFormat:@"\n%@", [transaction stateLine1]];
     [message appendFormat:@"\n%@", [transaction stateLine2]];
-    [message appendString:@"\n----------------------------------------"];
+    [message appendString:@"\n---------------------------------------"];
     [message appendFormat:@"\nInvoice:%@", [transaction invoice]];
-    [message appendString:@"\n----------------------------------------"];
-    if ([transaction hasPhoto]) [message appendFormat:@"\nPhoto URL:%@\n----------------------------------------", [transaction photoURL]];
-    if ([transaction hasSignature]) [message appendFormat:@"\nSignature URL:%@\n----------------------------------------", [transaction signatureURL]];
-    if ([transaction hasGPSData]) [message appendFormat:@"\nGPS data:%f;%f\n----------------------------------------", [transaction latitude], [transaction longitude]];
+    [message appendString:@"\n---------------------------------------"];
+    
+    if ([transaction withAuxData])
+    {
+        NSError *error = NULL;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[transaction auxData] options:0 error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        if (!error && ![Utility stringIsNullOrEmty:jsonString])
+        {
+            [message appendFormat:@"\nAuxData:%@", jsonString];
+            [message appendString:@"\n---------------------------------------"];
+        }
+    }
+    
+    /*
+    if ([transaction withPurchases])
+    {
+        NSArray *purchases = [transaction purchases];
+        [message appendFormat:@"\nPurchases data:%@", [Purchase purchases2JsonString:purchases]];
+        [message appendString:@"\n---------------------------------------"];
+        [purchases release];
+    }
+    
+    if ([transaction withTags])
+    {
+        NSArray *tags = [transaction tags];
+        [message appendFormat:@"\nTags data:%@", [Tag tags2JsonString:tags]];
+        [message appendString:@"\n---------------------------------------"];
+        [tags release];
+    }
+    */
+    
+    if ([transaction hasPhoto]) [message appendFormat:@"\nPhoto URL:%@\n---------------------------------------", [transaction photoURL]];
+    if ([transaction hasSignature]) [message appendFormat:@"\nSignature URL:%@\n---------------------------------------", [transaction signatureURL]];
+    if ([transaction hasGPSData]) [message appendFormat:@"\nGPS data:%f;%f\n---------------------------------------", [transaction latitude], [transaction longitude]];
     
     if ([transaction withCustomFields])
     {
@@ -295,14 +313,14 @@
             
             for (DescriptionProductField *field in customFields)
             {
-                if ([field type] == DescriptionProductFieldType_Text)
+                if ([field type] == DescriptionProductFieldType_TEXT)
                     [message appendFormat:@"\nText field:%@ - %@", [field title], [field value]];
-                else if ([field type] == DescriptionProductFieldType_Image)
+                else if ([field type] == DescriptionProductFieldType_IMAGE)
                     [message appendFormat:@"\nImage field:%@ - %@", [field title], [field value]];
             }
             [customFields release];
         }
-        [message appendString:@"\n----------------------------------------"];
+        [message appendString:@"\n---------------------------------------"];
     }
     else if ([transaction withOrder])
     {
@@ -321,21 +339,58 @@
             }
             [products release];
         }
-        [message appendString:@"\n----------------------------------------"];
+        [message appendString:@"\n---------------------------------------"];
     }
     
     [card release];
+    
+    FiscalInfo *fiscalInfo = [transaction fiscalInfo];
+    if ([fiscalInfo status] == FiscalInfoStatus_SUCCESS)
+    {
+        NSString *fiscalData = [self fiscalInfo2String:fiscalInfo];
+        if (![Utility stringIsNullOrEmty:fiscalData])
+        {
+            [message appendFormat:@"\n%@:", [Utility localizedStringWithKey:@"fiscal_info_title"]];
+            [message appendFormat:@"\n%@", fiscalData];
+            [message appendString:@"\n---------------------------------------"];
+        }
+    }
     
     NSString *reverseButtonTitle = NULL;
     if ([transaction reverseMode] == TransactionReverseMode_RETURN ||
         [transaction reverseMode] == TransactionReverseMode_RETURN_PARTIAL)
         reverseButtonTitle = [Utility localizedStringWithKey:@"history_return_payment"];
     else if ([transaction reverseMode] == TransactionReverseMode_CANCEL ||
-             [transaction reverseMode] == TransactionReverseMode_CANCEL_PARTIAL)
+             [transaction reverseMode] == TransactionReverseMode_CANCEL_PARTIAL ||
+             [transaction reverseMode] == TransactionReverseMode_CANCEL_CNP ||
+             [transaction reverseMode] == TransactionReverseMode_CANCEL_CNP_PARTIAL)
         reverseButtonTitle = [Utility localizedStringWithKey:@"history_cancel_payment"];
+
+    UIAlertController *alert = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"history_transaction_details"] message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_ok"] style:UIAlertActionStyleCancel handler:NULL]];
+    if (![Utility stringIsNullOrEmty:reverseButtonTitle])
+    {
+        [alert addAction:[UIAlertAction actionWithTitle:reverseButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            Reverse *reverse = [[Reverse alloc] init];
+            [reverse setTransaction:mSelectedTransaction];
+            [self.navigationController pushViewController:reverse animated:TRUE];
+            [reverse release];
+        }]];
+    }
+    if (account && [account usesServerFiscalization])
+    {
+        if (!fiscalInfo || [fiscalInfo status] != FiscalInfoStatus_SUCCESS)
+        {
+            [alert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_fiscalize"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self fiscalizeTransaction];
+            }]];
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:alert animated:TRUE completion:NULL];
+    });
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"history_transaction_details"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_ok"] otherButtonTitles:reverseButtonTitle, NULL];
-    [alert show];
+    [fiscalInfo release];
 }
 
 #pragma mark - Scroll view delegate
@@ -371,6 +426,56 @@
     
     [btnClose addTarget:self action:@selector(btnCloseClick) forControlEvents:UIControlEventTouchUpInside];
     [btnTransaction addTarget:self action:@selector(btnTransactionClick) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)fiscalizeTransaction
+{
+    [viewActivity setHidden:FALSE];
+    [viewActivity startAnimating];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        APIFiscalizeResult *result = [[PaymentController instance] fiscalizeWithTrId:[mSelectedTransaction ID]];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [viewActivity setHidden:TRUE];
+            [viewActivity stopAnimating];
+            
+            if (result)
+            {
+                if ([result valid] && ![result errorCode])
+                {
+                    TransactionItem *transaction = [result transaction];
+                    if (transaction)
+                    {
+                        FiscalInfo *fiscalInfo = [transaction fiscalInfo];
+                        NSString *message = [self fiscalInfo2String:fiscalInfo];
+                        if (![Utility stringIsNullOrEmty:message])
+                            [[[DRToast alloc] initWithMessage:message Title:[Utility localizedStringWithKey:@"fiscal_info_title"] Duration:Long] show];
+                    }
+                }
+                else
+                {
+                    [[[DRToast alloc] initWithMessage:[result errorMessage]] show];
+                }
+            }
+        });
+    });
+}
+
+-(NSString *)fiscalInfo2String:(FiscalInfo *)fiscalInfo
+{
+    NSMutableString *returnValue = NULL;
+    if (fiscalInfo && [fiscalInfo status] == FiscalInfoStatus_SUCCESS)
+    {
+        returnValue = [[NSMutableString alloc] init];
+        [returnValue appendFormat:@"%@\n", [fiscalInfo dateTime]];
+        [returnValue appendFormat:@"%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_invoice"], [fiscalInfo printerDocSerialNumber]];
+        [returnValue appendFormat:@"%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_fd"], [fiscalInfo documentNumber]];
+        [returnValue appendFormat:@"%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_fn"], [fiscalInfo storageNumber]];
+        [returnValue appendFormat:@"%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_fdp"], [fiscalInfo documentMark]];
+        [returnValue appendFormat:@"%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_zn"], [fiscalInfo printerSerialNumber]];
+        [returnValue appendFormat:@"%@%@", [Utility localizedStringWithKey:@"fiscal_info_shift"], [fiscalInfo printerShift]];
+    }
+    return returnValue;
 }
 
 -(void)setTrnsactionID:(NSString *)transactionID

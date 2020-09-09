@@ -15,6 +15,7 @@
 "common_retry" = "Повтроить";
 "common_continue" = "Продолжить";
 "common_copy_to_clipboard" = "Скопировано в буфер обмена";
+"common_fiscalize" = "Фискализировать";
 
 /* Initial */
 "initial_ping" = "Проверить ридер";
@@ -28,14 +29,40 @@
 "initial_payment_type_credit" = "Постоплата";
 "initial_payment_type_link" = "Ссылка";
 "initial_payment_type_recurrent" = "Рекуррентный платеж";
-"initial_product_payment" = "Продукт";
 "initial_product_field_hint" = "Product field";
 "initial_purchase" = "Покупка";
+"initial_transaction" = "Транзакция";
+"initial_product" = "Продукт";
+"initial_product_data" = "Текущие данные полей:";
+"initial_product_no_data" = "Данные полей отсутствуют.";
+"initial_product_edit" = "Изменить данные полей";
+"initial_reader_type" = "Тип ридера";
 "initial_select_reader_type" = "Выберите тип ридера";
 "initial_reader_type_chipsign" = "C15";
 "initial_reader_type_chippin" = "P15";
 "initial_reader_type_qposmini" = "P17";
 "initial_authorization" = "Авторизация";
+"initial_tags" = "Использовать теги";
+"initial_add_tags" = "Тег для:";
+"initial_tag_code" = "код";
+"initial_tag_value" = "значение";
+"initial_tags_data" = "Текущие данные тегов:";
+"initial_tags_no_data" = "Теги отсутствуют.";
+"initial_clear_data" = "Очистить данные";
+"initial_add" = "Добавить";
+"initial_add_purchase" = "Покупка:";
+"initial_purchase_title" = "название";
+"initial_purchase_price" = "цена";
+"initial_purchase_quantity" = "количество";
+"initial_purchase_tax_code" = "код налога";
+"initial_purchase_data" = "Текущие данные покупок:";
+"initial_purchase_no_data" = "Покупки отсутствуют.";
+"initial_extid_hint" = "Внешний идентификатор";
+
+/* Product */
+"product_preparable" = "Загрузка данных заказа";
+"product_save" = "Сохранить";
+"product_prepare" = "Отправить запрос";
 
 /* History */
 "history_title" = "История";
@@ -49,6 +76,8 @@
 
 /* Reverse */
 "reverse_amount" = "Сумма отмены";
+"reverse_purchases_error" = "Ошибка данных покупок";
+"reverse_tags_error" = "Ошибка данных тегов";
 
 /* Schedule */
 "schedule_type" = "Периодичность";
@@ -74,14 +103,16 @@
 "payment_reader_connect" = "Подключите ридер";
 "payment_swipe_insert" = "Вставьте карту или проведите магнитной полосой";
 "payment_swipe" = "Проведите магнитной полосой";
+"payment_swipe_insert_tap" = "Вставьте карту или приложите или проведите магнитной полосой";
 "payment_error_reader_disconnected" = "Ридер одключен";
 "payment_error_reader_timeout" = "Таймаут ридера";
-"payment_error_zero_transaction" = "Сумма должна быть больше нуля";
 "payment_error_reverse" = "Ошибка проведения отмены платежа";
 "payment_card_error" = "Ошибка карты";
 "payment_card_eject" = "Извлеките карту";
 "payment_choose_card_app" = "Выберите прилолжение";
 "payment_steps" = "Шаги";
+"payment_error_emv_cancel" = "Транзакция отменена EMV Cancel";
+"payment_error_emv_zero_tran" = "Сумма должна быть больше нуля";
 
 /* AdditionalData */
 "additional_data_signature" = "Подпись";
@@ -99,12 +130,23 @@
 "payment_result_transaction_date" = "Дата и время операции";
 "payment_result_transaction_terminal_name" = "Номер терминала";
 "payment_result_transaction_invoice" = "Номер чека";
+"payment_result_transaction_rrn" = "RRN";
 "payment_result_transaction_approval_code" = "Код подтверждения";
 "payment_result_transaction_iin_and_pan" = "Номер и тип карты";
 "payment_result_transaction_emv_data" = "EMV тэги транзакции";
 "payment_result_transaction_operation" = "Тип операции";
 "payment_result_transaction_amount" = "Сумма операции";
-"payment_result_transaction_tax" = "Комиссия";
+"payment_result_transaction_extid" = "Внешний идентификатор";
+"payment_result_transaction_tax" = "Комиссия: 0р.";
 "payment_result_transaction_state" = "Статус";
 "payment_result_client_signature" = "Подпись клиента___________________";
 "payment_result_client_pin" = "Подтверждено вводом PIN";
+
+/* FiscalInfo */
+"fiscal_info_title" = "Фискальная информация";
+"fiscal_info_invoice" = "Чек №";
+"fiscal_info_fd" = "ФД №";
+"fiscal_info_fn" = "ФН №";
+"fiscal_info_fdp" = "ФПД №";
+"fiscal_info_zn" = "ЗН ККТ";
+"fiscal_info_shift" = "Смена №";

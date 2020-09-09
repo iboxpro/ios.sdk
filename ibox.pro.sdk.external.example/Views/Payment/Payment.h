@@ -16,16 +16,16 @@
 -(void)paymentFinished:(TransactionData *)transactionData;
 @end
 
-@interface Payment : UIViewController<PaymentControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface Payment : UIViewController<PaymentControllerDelegate>
 {
 IBOutlet UIButton *btnClose;
 IBOutlet UILabel *lblText;
     
 @private id<PaymentDelegate> mDelegate;
 @private PaymentContext *mPaymentContext;
-@private UIActionSheet *mCardAppsMenu;
-@private UIActionSheet *mBTDevicesMenu;
-@private UIAlertView *mErrorAlert;
+@private TransactionData *mTransactionData;
+@private UIAlertController *mErrorAlert;
+@private int mFiscalCounter;
 }
 
 -(Payment *)init;

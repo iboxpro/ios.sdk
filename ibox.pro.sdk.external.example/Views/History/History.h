@@ -10,7 +10,7 @@
 
 @class TransactionItem;
 
-@interface History : UIViewController<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface History : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
 IBOutlet UIButton *btnClose;
 IBOutlet UIButton *btnTransaction;
@@ -22,7 +22,6 @@ IBOutlet UIActivityIndicatorView *viewActivity;
 @private NSMutableArray *mData;
 @private NSArray *mInProcessTransactions;
 @private TransactionItem *mSelectedTransaction;
-@private UIAlertView *mTrIdAlert;
 }
 
 -(History *)init;

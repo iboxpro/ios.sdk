@@ -17,6 +17,7 @@
 }
 
 -(void)setAccount:(Account *)account;
+-(UIViewController *)currentViewController;
 -(UIWindow *)window;
 -(Account *)account;
 

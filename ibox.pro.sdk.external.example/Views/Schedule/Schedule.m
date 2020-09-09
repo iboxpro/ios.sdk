@@ -85,42 +85,6 @@
     [btnOk addTarget:self action:@selector(btnOkClick) forControlEvents:UIControlEventTouchUpInside];
 }
 
-#pragma mark - UIActionSheetDelegate
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (!buttonIndex)
-        return;
-    
-    if ([actionSheet tag] == 1)
-    {
-        if (buttonIndex == 1)
-            [mRecurrentPaymentContext setType:ScheduleType_DelayedOnce];
-        else if (buttonIndex == 2)
-            [mRecurrentPaymentContext setType:ScheduleType_Weekly];
-        else if (buttonIndex == 3)
-            [mRecurrentPaymentContext setType:ScheduleType_Monthly];
-        else if (buttonIndex == 4)
-            [mRecurrentPaymentContext setType:ScheduleType_Quarterly];
-        else if (buttonIndex == 5)
-            [mRecurrentPaymentContext setType:ScheduleType_Annual];
-        else if (buttonIndex == 6)
-            [mRecurrentPaymentContext setType:ScheduleType_ArbitraryDates];
-        
-        [mRecurrentPaymentContext setMonth:1];
-        [mRecurrentPaymentContext setDay:1];
-    }
-    else if ([actionSheet tag] == 2)
-    {
-        [mRecurrentPaymentContext setDay:(int)buttonIndex - 1];
-    }
-    else if ([actionSheet tag] == 3)
-    {
-        [mRecurrentPaymentContext setMonth:(int)buttonIndex];
-    }
-    
-    [self updateViews];
-}
-
 #pragma mark - UITextFieldDelegate
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -199,16 +163,52 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIActionSheet *repeatMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"schedule_type"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
-    [repeatMenu setTag:1];
-    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_delayed_once"]];
-    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_weekly"]];
-    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_monthly"]];
-    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_quarterly"]];
-    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_annual"]];
-    [repeatMenu addButtonWithTitle:[Utility localizedStringWithKey:@"schedule_type_arbitrary_dates"]];
-    [repeatMenu showInView:self.view];
-    [repeatMenu release];
+    UIAlertController *repeatMenu = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"schedule_type"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"schedule_type_delayed_once"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        int index = (int)[[repeatMenu actions] indexOfObject:action];
+        [self selectScheduleTypeIndex:index];
+    }]];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"schedule_type_weekly"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        int index = (int)[[repeatMenu actions] indexOfObject:action];
+        [self selectScheduleTypeIndex:index];
+    }]];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"schedule_type_monthly"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        int index = (int)[[repeatMenu actions] indexOfObject:action];
+        [self selectScheduleTypeIndex:index];
+    }]];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"schedule_type_quarterly"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        int index = (int)[[repeatMenu actions] indexOfObject:action];
+        [self selectScheduleTypeIndex:index];
+    }]];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"schedule_type_annual"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        int index = (int)[[repeatMenu actions] indexOfObject:action];
+        [self selectScheduleTypeIndex:index];
+    }]];
+    [repeatMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"schedule_type_arbitrary_dates"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        int index = (int)[[repeatMenu actions] indexOfObject:action];
+        [self selectScheduleTypeIndex:index];
+    }]];
+    [self presentViewController:repeatMenu animated:TRUE completion:NULL];
+}
+
+-(void)selectScheduleTypeIndex:(int)index
+{
+    if (index == 1)
+        [mRecurrentPaymentContext setType:ScheduleType_DelayedOnce];
+    else if (index == 2)
+        [mRecurrentPaymentContext setType:ScheduleType_Weekly];
+    else if (index == 3)
+        [mRecurrentPaymentContext setType:ScheduleType_Monthly];
+    else if (index == 4)
+        [mRecurrentPaymentContext setType:ScheduleType_Quarterly];
+    else if (index == 5)
+        [mRecurrentPaymentContext setType:ScheduleType_Annual];
+    else if (index == 6)
+        [mRecurrentPaymentContext setType:ScheduleType_ArbitraryDates];
+    [mRecurrentPaymentContext setMonth:1];
+    [mRecurrentPaymentContext setDay:1];
+    [self updateViews];
 }
 
 -(void)btnWeekDayClick
@@ -217,12 +217,17 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIActionSheet *weekDayMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"schedule_week_day"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
-    [weekDayMenu setTag:2];
+    UIAlertController *weekDayMenu = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"schedule_week_day"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+    [weekDayMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
     for (int i = 0; i < 7; i++)
-        [weekDayMenu addButtonWithTitle:[[mDateFormatter standaloneWeekdaySymbols] objectAtIndex:i]];
-    [weekDayMenu showInView:self.view];
-    [weekDayMenu release];
+    {
+        [weekDayMenu addAction:[UIAlertAction actionWithTitle:[[mDateFormatter standaloneWeekdaySymbols] objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            int index = (int)[[weekDayMenu actions] indexOfObject:action];
+            [mRecurrentPaymentContext setDay:index - 1];
+            [self updateViews];
+        }]];
+    }
+    [self presentViewController:weekDayMenu animated:TRUE completion:NULL];
 }
 
 -(void)btnMonthClick
@@ -231,20 +236,31 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIActionSheet *monthMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"schedule_month"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
-    [monthMenu setTag:3];
+    UIAlertController *monthMenu = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"schedule_week_day"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+    [monthMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
     if (mRecurrentPaymentContext.Type == ScheduleType_Annual)
     {
         for (int i = 0; i < 12; i++)
-            [monthMenu addButtonWithTitle:[[mDateFormatter standaloneMonthSymbols] objectAtIndex:i]];
+        {
+            [monthMenu addAction:[UIAlertAction actionWithTitle:[[mDateFormatter standaloneMonthSymbols] objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                int index = (int)[[monthMenu actions] indexOfObject:action];
+                [mRecurrentPaymentContext setMonth:index];
+                [self updateViews];
+            }]];
+        }
     }
     else if (mRecurrentPaymentContext.Type == ScheduleType_Quarterly)
     {
         for (int i = 0; i < 3; i++)
-            [monthMenu addButtonWithTitle:[NSString stringWithFormat:@"%d", i + 1]];
+        {
+            [monthMenu addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%d", i + 1] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                int index = (int)[[monthMenu actions] indexOfObject:action];
+                [mRecurrentPaymentContext setMonth:index];
+                [self updateViews];
+            }]];
+        }
     }
-    [monthMenu showInView:self.view];
-    [monthMenu release];
+    [self presentViewController:monthMenu animated:TRUE completion:NULL];
 }
 
 -(void)btnOkClick

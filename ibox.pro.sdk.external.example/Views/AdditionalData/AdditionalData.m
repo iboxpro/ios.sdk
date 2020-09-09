@@ -30,6 +30,7 @@
     [viewSignature release];
     [viewCover release];
     [ctrReceiptDataTop release];
+    [viewActivity release];
     [super dealloc];
 }
 
@@ -40,28 +41,42 @@
     [self updateControls];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.view addGestureRecognizer:mTapGestureRecognizer];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.view removeGestureRecognizer:mTapGestureRecognizer];
+    [super viewWillDisappear:animated];
+}
+
 #pragma mark - Events
 -(void)btnOkClick
 {
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [indicator setFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
-    [indicator setCenter:self.view.center];
-    [self.view addSubview:indicator];
-    [indicator bringSubviewToFront:self.view];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:TRUE];
-    [indicator startAnimating];
+    [viewActivity setHidden:FALSE];
+    [viewActivity startAnimating];
+    
+    NSData *signatureData = NULL;
+    if (![viewSignature isEmpty])
+        signatureData = [viewSignature getByteArray];
+    
+    __block NSString *email = [txtReceiptMail text];
+    __block NSString *phone = [txtReceiptPhone text];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         APIResult *result = NULL;
         if ([mTransactionData Type] == TransactionDataType_PAYMENT)
-            result = [[PaymentController instance] adjustWithTrId:[mTransactionData ID] Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
+            result = [[PaymentController instance] adjustWithTrId:[mTransactionData ID] Signature:signatureData ReceiptEmail:email ReceiptPhone:phone];
         else if ([mTransactionData Type] == TransactionDataType_SCHEDULE)
-            result = [[PaymentController instance] adjustWithScheduleId:[mTransactionData ID] Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
+            result = [[PaymentController instance] adjustWithScheduleId:[mTransactionData ID] Signature:signatureData ReceiptEmail:email ReceiptPhone:phone];
         else if ([mTransactionData Type] == TransactionDataType_REVERSE)
-            result = [[PaymentController instance] reverseAdjustWithTrId:[mTransactionData ID] Signature:[viewSignature getByteArray] ReceiptEmail:txtReceiptMail.text ReceiptPhone:txtReceiptPhone.text];
+            result = [[PaymentController instance] reverseAdjustWithTrId:[mTransactionData ID] Signature:signatureData ReceiptEmail:email ReceiptPhone:phone];
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [indicator stopAnimating];
-            [indicator release];
+            [viewActivity setHidden:TRUE];
+            [viewActivity stopAnimating];
             
             if (result)
             {
@@ -79,6 +94,18 @@
             }
         });
     });
+}
+
+-(void)tap
+{
+    [txtReceiptMail resignFirstResponder];
+    [txtReceiptPhone resignFirstResponder];
+    
+    [ctrReceiptDataTop setConstant:300.0f];
+    [UIView animateWithDuration:0.2 animations:^{
+        [viewCover setAlpha:0.0f];
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark - UITextField delegate
@@ -109,15 +136,25 @@
     return TRUE;
 }
 
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    return TRUE;
+}
+
 #pragma mark - Other methods
 -(void)updateControls
 {
     [Utility updateTextWithViewController:self];
+    [viewActivity setHidden:TRUE];
     
     [txtReceiptMail setDelegate:self];
     [txtReceiptPhone setDelegate:self];
     
     [btnOk addTarget:self action:@selector(btnOkClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    mTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
+    [mTapGestureRecognizer setNumberOfTapsRequired:1];
+    [mTapGestureRecognizer setNumberOfTouchesRequired:1];
 }
 
 #pragma mark - Public methods

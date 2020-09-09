@@ -15,6 +15,7 @@
 "common_retry" = "Retry";
 "common_continue" = "Continue";
 "common_copy_to_clipboard" = "Сopy to clipboard";
+"common_fiscalize" = "Fiscalize";
 
 /* Initial */
 "initial_ping" = "Ping";
@@ -28,14 +29,40 @@
 "initial_payment_type_credit" = "Credit";
 "initial_payment_type_link" = "Link";
 "initial_payment_type_recurrent" = "Recurrent payment";
-"initial_product_payment" = "Product";
 "initial_product_field_hint" = "Product field";
 "initial_purchase" = "Purchase";
+"initial_transaction" = "Transaction";
+"initial_product" = "Product";
+"initial_product_data" = "Current fields data:";
+"initial_product_no_data" = "No fields data.";
+"initial_product_edit" = "Edit fields data";
+"initial_reader_type" = "Reader type";
 "initial_select_reader_type" = "Select reader type";
 "initial_reader_type_chipsign" = "C15";
 "initial_reader_type_chippin" = "P15";
 "initial_reader_type_qposmini" = "P17";
 "initial_authorization" = "Authorization";
+"initial_tags" = "Use tags";
+"initial_add_tags" = "Add tag for:";
+"initial_tag_code" = "tag code";
+"initial_tag_value" = "tag value";
+"initial_tags_data" = "Current tags data:";
+"initial_tags_no_data" = "No tags data.";
+"initial_clear_data" = "Clear data";
+"initial_add" = "Add";
+"initial_add_purchase" = "Purchase:";
+"initial_purchase_title" = "title";
+"initial_purchase_price" = "price";
+"initial_purchase_quantity" = "quantity";
+"initial_purchase_tax_code" = "tax code";
+"initial_purchase_data" = "Current purchase data:";
+"initial_purchase_no_data" = "No purchase data.";
+"initial_extid_hint" = "ExtID";
+
+/* Product */
+"product_preparable" = "Preparable product";
+"product_save" = "Save data";
+"product_prepare" = "Send request";
 
 /* History */
 "history_title" = "History";
@@ -49,6 +76,8 @@
 
 /* Reverse */
 "reverse_amount" = "Reverse amount";
+"reverse_purchases_error" = "Purchases error";
+"reverse_tags_error" = "Tags error";
 
 /* Schedule */
 "schedule_type" = "Repeat";
@@ -74,14 +103,16 @@
 "payment_reader_connect" = "Connect reader";
 "payment_swipe_insert" = "Insert card or swipe";
 "payment_swipe" = "Swipe card";
+"payment_swipe_insert_tap" = "Insert card or swipe or tap";
 "payment_error_reader_disconnected" = "Reader disconnected";
 "payment_error_reader_timeout" = "Reader timeout";
-"payment_error_zero_transaction" = "Zerro amount";
 "payment_error_reverse" = "Cancelation error";
 "payment_card_error" = "Card error";
 "payment_card_eject" = "Eject card";
 "payment_choose_card_app" = "Choose application";
 "payment_steps" = "Steps";
+"payment_error_emv_cancel" = "Transaction canceled EMV Cancel";
+"payment_error_emv_zero_tran" = "Zerro amount";
 
 /* AdditionalData */
 "additional_data_signature" = "Signature";
@@ -99,12 +130,24 @@
 "payment_result_transaction_date" = "Transaction date";
 "payment_result_transaction_terminal_name" = "Terminal";
 "payment_result_transaction_invoice" = "Invoice";
+"payment_result_transaction_rrn" = "RRN";
+
 "payment_result_transaction_approval_code" = "Approval code";
 "payment_result_transaction_iin_and_pan" = "Card number & type";
 "payment_result_transaction_emv_data" = "EMV data";
 "payment_result_transaction_operation" = "Operation";
+"payment_result_transaction_extid" = "ExtID";
 "payment_result_transaction_amount" = "Ammount";
 "payment_result_transaction_tax" = "Tax";
 "payment_result_transaction_state" = "State";
 "payment_result_client_signature" = "Client signature__________________";
 "payment_result_client_pin" = "Was entered PIN";
+
+/* FiscalInfo */
+"fiscal_info_title" = "Fiscal info";
+"fiscal_info_invoice" = "Invoice #";
+"fiscal_info_fd" = "FD #";
+"fiscal_info_fn" = "FN #";
+"fiscal_info_fdp" = "FPD #";
+"fiscal_info_zn" = "ZN KKT";
+"fiscal_info_shift" = "Shift #";

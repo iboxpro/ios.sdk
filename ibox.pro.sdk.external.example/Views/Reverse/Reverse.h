@@ -14,8 +14,17 @@
 IBOutlet UIButton *btnClose;
 IBOutlet UITextField *txtAmount;
 IBOutlet UITextField *txtReverse;
+IBOutlet UITextField *txtEmail;
+IBOutlet UITextField *txtPhone;
+IBOutlet UIView *viewAuxDataContainer;
+IBOutlet UITextView *txtAuxData;
 IBOutlet UIButton *btnOk;
+
+IBOutlet NSLayoutConstraint *ctrDividerTop;
+IBOutlet NSLayoutConstraint *ctrScrollBottom;
+    
 @private TransactionItem *mTransaction;
+@private UITapGestureRecognizer *mTapGestureRecognizer;
 }
 
 -(Reverse *)init;

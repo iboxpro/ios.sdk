@@ -12,6 +12,7 @@
 #import "PaymentController.h"
 #import "Payment.h"
 #import "Schedule.h"
+#import "ProductDetails.h"
 #import "AdditionalData.h"
 #import "PaymentResult.h"
 #import "History.h"
@@ -22,6 +23,10 @@
 
 @implementation Initial
 
+@synthesize SelectedProduct = mSelectedProduct;
+@synthesize ProductData = mProductData;
+@synthesize Products = mProducts;
+
 #pragma mark - Ctor/Dtor
 -(Initial *)init
 {
@@ -30,6 +35,10 @@
     {
         mEmail = NULL;
         mPassword = NULL;
+        mLoginAlert = NULL;
+        [self setSelectedProduct:NULL];
+        [self setProductData:NULL];
+        [self setProducts:NULL];
     }
     return self;
 }
@@ -38,6 +47,9 @@
 {
     if (mEmail) [mEmail release];
     if (mPassword) [mPassword release];
+    if (mSelectedProduct) [mSelectedProduct release];
+    if (mProductData) [mProductData release];
+    if (mProducts) [mProducts release];
     [txtAmount release];
     [txtDescription release];
     [txtPayType release];
@@ -47,40 +59,59 @@
     [ctrDescriptionHeight release];
     [ctrFieldsHeight release];
     [sgmProduct release];
-    [txtFieldOne release];
-    [txtFieldTwo release];
     [btnHistory release];
-    [btnPing release];
     [viewActivity release];
+    [ctrPayTypeHeight release];
+    [ctrScrollBottom release];
+    [viewProductContainer release];
+    [txtProductTitle release];
+    [lblProductData release];
+    [btnProductEdit release];
+    [txtExtId release];
+    [txtAuxData release];
     [super dealloc];
 }
 
 #pragma mark - View controller life cycle
 -(void)viewDidLoad
 {
+    NSLog(@"SDK version: %@", [[PaymentController instance] version]);
+    
     [super viewDidLoad];
     [self updateControls];
-    
-    mLoginAlert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_authorization"] message:NULL delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:[Utility localizedStringWithKey:@"common_ok"], NULL];
-    [mLoginAlert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-    [mLoginAlert show];
-    
-    [[mLoginAlert textFieldAtIndex:0] setText:@""];
-    [[mLoginAlert textFieldAtIndex:1] setText:@""];
+    [self showLoginAlert];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self enableKeyboardObservers];
+    [self.view addGestureRecognizer:mTapGestureRecognizer];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [self.view removeGestureRecognizer:mTapGestureRecognizer];
+    [self disableKeyboardObservers];
+    [super viewWillDisappear:animated];
 }
 
 #pragma mark - Events
 -(void)btnOkClick
 {
     Account *account = [[Utility appDelegate] account];
-    if (account)
+    if (![Utility stringIsNullOrEmty:mPassword] &&
+        ![Utility stringIsNullOrEmty:mEmail] && account)
     {
         [txtDescription resignFirstResponder];
         [txtPayType resignFirstResponder];
         [txtAmount resignFirstResponder];
+        [txtAuxData resignFirstResponder];
         
-        mPaymentMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_payment"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
-        
+        UIAlertController *actionSheet = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"initial_payment"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self dismissViewControllerAnimated:TRUE completion:NULL];
+        }]];
         NSArray *paymentOptions = [account paymentOptions];
         for (PaymentOption *paymentOption in paymentOptions)
         {
@@ -103,17 +134,87 @@
             if ([paymentOption acquirer])
                 [cellTitle appendFormat:@" - %@", [[paymentOption acquirer] name]];
             
-            [mPaymentMenu addButtonWithTitle:cellTitle];
+            [actionSheet addAction:[UIAlertAction actionWithTitle:cellTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                int index = (int)[[actionSheet actions] indexOfObject:action] - 1;
+                PaymentOption *paymentOption = [paymentOptions objectAtIndex:index];
+                
+                PaymentContext *paymentContext = [[PaymentContext alloc] init];
+                [self updatePaymentContext:paymentContext];
+                
+                if ([paymentOption inputType] == TransactionInputType_SWIPE ||
+                    [paymentOption inputType] == TransactionInputType_EMV ||
+                    [paymentOption inputType] == TransactionInputType_NFC)
+                {
+                    [paymentContext setInputType:TransactionInputType_NFC];
+                }
+                else if ([paymentOption inputType] == TransactionInputType_CASH)
+                {
+                    [paymentContext setAmountCash:[paymentContext Amount]];
+                    [paymentContext setInputType:TransactionInputType_CASH];
+                }
+                else
+                {
+                    [paymentContext setInputType:[paymentOption inputType]];
+                }
+                
+                if ([paymentOption acquirer])
+                    [paymentContext setAcquirer:[[paymentOption acquirer] code]];
+                
+                Payment *payment = [[Payment alloc] init];
+                [payment setPaymentContext:paymentContext];
+                [payment setDelegate:self];
+                [self.navigationController pushViewController:payment animated:FALSE];
+                [paymentContext release];
+                [payment release];
+            }]];
+            
             [cellTitle release];
         }
         [paymentOptions release];
         
-        [mPaymentMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_recurrent"]];
-        [mPaymentMenu showInView:[self view]];
-        [mPaymentMenu release];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"initial_payment_type_recurrent"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            RecurrentPaymentContext *recurrentPaymentContext = [[RecurrentPaymentContext alloc] init];
+            [self updatePaymentContext:recurrentPaymentContext];
+            
+            Schedule *schedule = [[Schedule alloc] init];
+            [schedule setRecurrentPaymentContext:recurrentPaymentContext];
+            [self.navigationController pushViewController:schedule animated:FALSE];
+            [recurrentPaymentContext release];
+            [schedule release];
+        }]];
+        
+        [self presentViewController:actionSheet animated:TRUE completion:NULL];
     }
     else
-        [mLoginAlert show];
+        [self showLoginAlert];
+}
+
+-(void)btnProductEditClick
+{
+    ProductDetails *productDetails = [[ProductDetails alloc] init];
+    [productDetails setProducts:mProducts];
+    [productDetails setDoneAction:^(DescriptionProduct *product, NSString *amount, NSArray *productData, void *owner) {
+        Initial *this = (Initial *)owner;
+        if (product && productData)
+        {
+            if (![Utility stringIsNullOrEmty:amount])
+                [this->txtAmount setText:amount];
+            
+            [this setSelectedProduct:product];
+            [this setProductData:productData];
+            
+            NSError *error = NULL;
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:productData options:0 error:&error];
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            if (!error && ![Utility stringIsNullOrEmty:jsonString])
+            {
+                [this->lblProductData setText:jsonString];
+                [this.view layoutIfNeeded];
+            }
+        }
+    } Owner:self];
+    [self.navigationController pushViewController:productDetails animated:TRUE];
+    [productDetails release];
 }
 
 -(void)btnPayTypeClick
@@ -122,25 +223,74 @@
     [txtPayType resignFirstResponder];
     [txtAmount resignFirstResponder];
     
-    mReaderMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"initial_select_reader_type"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"]  destructiveButtonTitle:NULL otherButtonTitles:NULL];
-    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
-    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
-    [mReaderMenu addButtonWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
-    [mReaderMenu showInView:self.view];
-    [mReaderMenu release];
+    NSArray *supportReaders = [[PaymentController instance] supportedReaders];
+    if ((int)[supportReaders count] == 1)
+    {
+        PaymentControllerReaderType readerType = [(NSNumber *)[supportReaders firstObject] intValue];
+        if (readerType == PaymentControllerReaderType_C15)
+        {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_C15];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+        }
+        else if (readerType == PaymentControllerReaderType_P15)
+        {
+            ReaderScanner *readerScanner = [[ReaderScanner alloc] init];
+            [readerScanner setReaderType:PaymentControllerReaderType_P15];
+            [readerScanner setReaderTypeLocalized:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
+            [readerScanner setDelegate:self];
+            [self.navigationController pushViewController:readerScanner animated:TRUE];
+            [readerScanner release];
+        }
+        else if (readerType == PaymentControllerReaderType_P17)
+        {
+            ReaderScanner *readerScanner = [[ReaderScanner alloc] init];
+            [readerScanner setReaderType:PaymentControllerReaderType_P17];
+            [readerScanner setReaderTypeLocalized:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
+            [readerScanner setDelegate:self];
+            [self.navigationController pushViewController:readerScanner animated:TRUE];
+            [readerScanner release];
+        }
+    }
+    else
+    {
+        UIAlertController *actionSheet = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"initial_select_reader_type"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[PaymentController instance] setReaderType:PaymentControllerReaderType_C15];
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+        }]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_chippin"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            ReaderScanner *readerScanner = [[ReaderScanner alloc] init];
+            [readerScanner setReaderType:PaymentControllerReaderType_P15];
+            [readerScanner setReaderTypeLocalized:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
+            [readerScanner setDelegate:self];
+            [self.navigationController pushViewController:readerScanner animated:TRUE];
+            [readerScanner release];
+        }]];
+        [actionSheet addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            ReaderScanner *readerScanner = [[ReaderScanner alloc] init];
+            [readerScanner setReaderType:PaymentControllerReaderType_P17];
+            [readerScanner setReaderTypeLocalized:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
+            [readerScanner setDelegate:self];
+            [self.navigationController pushViewController:readerScanner animated:TRUE];
+            [readerScanner release];
+        }]];
+        [self presentViewController:actionSheet animated:TRUE completion:NULL];
+    }
+    [supportReaders release];
 }
 
 -(void)btnHistoryClick
 {
-    if ((mEmail && ![mEmail isEqualToString:@""]) &&
-        (mPassword && ![mPassword isEqualToString:@""]))
+    if (![Utility stringIsNullOrEmty:mPassword] &&
+        ![Utility stringIsNullOrEmty:mEmail])
     {
         History *history = [[History alloc] init];
         [self.navigationController pushViewController:history animated:TRUE];
         [history release];
     }
     else
-        [mLoginAlert show];
+        [self showLoginAlert];
 }
 
 -(void)btnForgetBTReaderClick
@@ -150,88 +300,58 @@
     [prefs synchronize];
 }
 
--(void)btnPingClick
-{
-    [[PaymentController instance] pingReaderWithDoneAction:^(NSDictionary *readerData) {
-        int charge = [[readerData objectForKey:CONSTS_KEY_READER_CHARGE] intValue];
-        BOOL connected = [[readerData objectForKey:CONSTS_KEY_READER_CONNECTED] boolValue];
-        [[[DRToast alloc] initWithMessage:connected ? [NSString stringWithFormat:[Utility localizedStringWithKey:@"initial_ping_connected"], charge] : [Utility localizedStringWithKey:@"initial_ping_not_connected"]] show];
-        NSLog(@"%@", readerData);
-    }];
-}
-
 -(void)segmentedControlAction:(UISegmentedControl *)segmentedControl
 {
     if (segmentedControl == sgmProduct)
     {
+        [self setSelectedProduct:NULL];
+        [self setProductData:NULL];
+        
         if (![sgmProduct selectedSegmentIndex])
         {
-            [ctrFieldsHeight setConstant:0.0f];
             [ctrDescriptionHeight setConstant:30.0f];
+            [lblProductData setText:[Utility localizedStringWithKey:@"initial_product_no_data"]];
+            [ctrFieldsHeight setConstant:0.0f];
         }
         else if ([sgmProduct selectedSegmentIndex] == 1)
         {
-            [ctrFieldsHeight setConstant:68.0f];
             [ctrDescriptionHeight setConstant:0.0f];
-        }
-        else if ([sgmProduct selectedSegmentIndex] == 2)
-        {
-            [ctrFieldsHeight setConstant:0.0f];
-            [ctrDescriptionHeight setConstant:30.0f];
+            
+            if (mProducts && [mProducts count])
+            {
+                DescriptionProduct *product = [mProducts firstObject];
+                [txtProductTitle setText:[product title]];
+                [ctrFieldsHeight setConstant:6666.0f];
+            }
         }
     }
+    
+    [self.view layoutIfNeeded];
 }
 
-#pragma mark - UIAlertViewDelegate
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)keyboardWillShow:(NSNotification *)notification
 {
-    int index = (int)buttonIndex;
-    if (index)
-    {
-        if (alertView == mLoginAlert)
-        {
-            if (![viewActivity isHidden])
-                return;
-            
-            [viewActivity setHidden:FALSE];
-            [viewActivity startAnimating];
-            
-            NSString *email = [[mLoginAlert textFieldAtIndex:0] text];
-            NSString *password = [[mLoginAlert textFieldAtIndex:1] text];
-            
-            [self setEmail:email];
-            [self setPassword:password];
-            
-            [[PaymentController instance] setEmail:email Password:password];
-            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                APIAuthenticationResult *result = [[PaymentController instance] authentication];
-                dispatch_sync(dispatch_get_main_queue(), ^{
-                    [viewActivity setHidden:TRUE];
-                    [viewActivity stopAnimating];
-                    
-                    if (result)
-                    {
-                        if ([result valid] && ![result errorCode])
-                        {
-                            Account *account = [result account];
-                            [[Utility appDelegate] setAccount:account];
-                            [account release];
-                        }
-                        else
-                        {
-                            [[[DRToast alloc] initWithMessage:[result errorMessage]] show];
-                            
-                            [self setEmail:NULL];
-                            [self setPassword:NULL];
-                        }
-                        
-                        [result release];
-                    }
-                });
-            });
-        }
-    }
+    float bottomMargin = [Utility keyboardHeightWithNotification:notification];
+    [ctrScrollBottom setConstant:bottomMargin];
+    [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self.view layoutIfNeeded];
+    } completion:NULL];
+}
+
+-(void)keyboardWillHide:(NSNotification *)notification
+{
+    [ctrScrollBottom setConstant:0.0f];
+    [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self.view layoutIfNeeded];
+    } completion:NULL];
+}
+
+-(void)tap
+{
+    [txtAmount resignFirstResponder];
+    [txtDescription resignFirstResponder];
+    [txtAuxData resignFirstResponder];
+    [txtExtId resignFirstResponder];
 }
 
 #pragma mark - ReaderScannerDelegate
@@ -276,99 +396,6 @@
     }
 }
 
-#pragma mark - UIActionSheetDelegate
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (!buttonIndex)
-        return;
-    
-    if (actionSheet == mPaymentMenu)
-    {
-        mPaymentMenu = NULL;
-        if ((mEmail && ![mEmail isEqualToString:@""]) &&
-            (mPassword && ![mPassword isEqualToString:@""]))
-        {
-            NSArray *paymentOptions = [[[Utility appDelegate] account] paymentOptions];
-            int index = (int)buttonIndex - 1;
-            if (index < [paymentOptions count])
-            {
-                PaymentOption *paymentOption = [paymentOptions objectAtIndex:index];
-             
-                PaymentContext *paymentContext = [[PaymentContext alloc] init];
-                [self updatePaymentContext:paymentContext];
-                
-                if ([paymentOption inputType] == TransactionInputType_SWIPE ||
-                    [paymentOption inputType] == TransactionInputType_EMV ||
-                    [paymentOption inputType] == TransactionInputType_NFC)
-                {
-                    [paymentContext setInputType:TransactionInputType_SWIPE];
-                }
-                else if ([paymentOption inputType] == TransactionInputType_CASH)
-                {
-                    double amountCashGot = (int)([paymentContext Amount] * 2.0);
-                    [paymentContext setAmountCash:amountCashGot];
-                    [paymentContext setInputType:TransactionInputType_CASH];
-                }
-                else
-                {
-                    [paymentContext setInputType:[paymentOption inputType]];
-                }
-                
-                if ([paymentOption acquirer])
-                    [paymentContext setAcquirer:[[paymentOption acquirer] code]];
-                
-                Payment *payment = [[Payment alloc] init];
-                [payment setPaymentContext:paymentContext];
-                [payment setDelegate:self];
-                [self.navigationController pushViewController:payment animated:FALSE];
-                [paymentContext release];
-                [payment release];
-            }
-            else
-            {
-                RecurrentPaymentContext *recurrentPaymentContext = [[RecurrentPaymentContext alloc] init];
-                [self updatePaymentContext:recurrentPaymentContext];
-                
-                Schedule *schedule = [[Schedule alloc] init];
-                [schedule setRecurrentPaymentContext:recurrentPaymentContext];
-                [self.navigationController pushViewController:schedule animated:FALSE];
-                [recurrentPaymentContext release];
-                [schedule release];
-            }
-            [paymentOptions release];
-        }
-        else
-            [mLoginAlert show];
-    }
-    else if (actionSheet == mReaderMenu)
-    {
-        mReaderMenu = NULL;
-        if (buttonIndex == 1)
-        {
-            [[PaymentController instance] setReaderType:PaymentControllerReaderType_C15];
-            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
-        }
-        else if (buttonIndex == 2)
-        {
-            ReaderScanner *readerScanner = [[ReaderScanner alloc] init];
-            [readerScanner setReaderType:PaymentControllerReaderType_P15];
-            [readerScanner setReaderTypeLocalized:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
-            [readerScanner setDelegate:self];
-            [self.navigationController pushViewController:readerScanner animated:TRUE];
-            [readerScanner release];
-        }
-        else if (buttonIndex == 3)
-        {
-            ReaderScanner *readerScanner = [[ReaderScanner alloc] init];
-            [readerScanner setReaderType:PaymentControllerReaderType_P17];
-            [readerScanner setReaderTypeLocalized:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
-            [readerScanner setDelegate:self];
-            [self.navigationController pushViewController:readerScanner animated:TRUE];
-            [readerScanner release];
-        }
-    }
-}
-
 #pragma mark - Other methods
 -(void)updateControls
 {
@@ -377,21 +404,119 @@
     [txtAmount setText:@"100"];
     [txtDescription setText:@"Test payment"];
     
-    [[PaymentController instance] setReaderType:PaymentControllerReaderType_C15];
-    [[PaymentController instance] setSingleStepAuthentication:FALSE];
+    NSArray *supportReaders = [[PaymentController instance] supportedReaders];
+    if ((int)[supportReaders count] == 1)
+    {
+        PaymentControllerReaderType readerType = [(NSNumber *)[supportReaders firstObject] intValue];
+        [[PaymentController instance] setReaderType:readerType];
+        
+        if (readerType == PaymentControllerReaderType_C15)
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+        else if (readerType == PaymentControllerReaderType_P15)
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chippin"]];
+        else if (readerType == PaymentControllerReaderType_P17)
+            [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_qposmini"]];
+    }
+    else
+    {
+        [[PaymentController instance] setReaderType:PaymentControllerReaderType_C15];
+        [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+    }
+    [supportReaders release];
     
-    [txtPayType setText:[Utility localizedStringWithKey:@"initial_reader_type_chipsign"]];
+    [[PaymentController instance] setRequestTimeout:30];
+    [[PaymentController instance] setClientProductCode:@"_2CAN_REGISTER"];
     
-    [[PaymentController instance] setRequestTimeOut:30];
-    [[PaymentController instance] setClientProductCode:@""];
-    
+    [sgmProduct setAlpha:0.0f];
     [sgmProduct addTarget:self action:@selector(segmentedControlAction:) forControlEvents:UIControlEventValueChanged];
     
+    [ctrFieldsHeight setConstant:0.0f];
+    
     [btnOk addTarget:self action:@selector(btnOkClick) forControlEvents:UIControlEventTouchUpInside];
+    [btnProductEdit addTarget:self action:@selector(btnProductEditClick) forControlEvents:UIControlEventTouchUpInside];
     [btnPayType addTarget:self action:@selector(btnPayTypeClick) forControlEvents:UIControlEventTouchUpInside];
     [btnForgetBTReader addTarget:self action:@selector(btnForgetBTReaderClick) forControlEvents:UIControlEventTouchUpInside];
     [btnHistory addTarget:self action:@selector(btnHistoryClick) forControlEvents:UIControlEventTouchUpInside];
-    [btnPing addTarget:self action:@selector(btnPingClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    mTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
+    [mTapGestureRecognizer setNumberOfTapsRequired:1];
+    [mTapGestureRecognizer setNumberOfTouchesRequired:1];
+}
+
+-(void)showLoginAlert
+{
+    mLoginAlert = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"initial_authorization"] message:NULL preferredStyle:UIAlertControllerStyleAlert];
+    [mLoginAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        [textField setPlaceholder:@"Email"];
+        [textField setKeyboardType:UIKeyboardTypeEmailAddress];
+    }];
+    [mLoginAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        [textField setPlaceholder:@"Password"];
+        [textField setSecureTextEntry:TRUE];
+    }];
+    
+    [mLoginAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
+    [mLoginAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (![viewActivity isHidden])
+            return;
+        
+        [viewActivity setHidden:FALSE];
+        [viewActivity startAnimating];
+        
+        NSString *email = [[[mLoginAlert textFields] objectAtIndex:0] text];
+        NSString *password = [[[mLoginAlert textFields] objectAtIndex:1] text];
+        
+        [self setEmail:email];
+        [self setPassword:password];
+        
+        [[PaymentController instance] setEmail:email Password:password];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            APIAuthenticationResult *result = [[PaymentController instance] authentication];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [viewActivity setHidden:TRUE];
+                [viewActivity stopAnimating];
+                
+                if (result)
+                {
+                    if ([result valid] && ![result errorCode])
+                    {
+                        Account *account = [result account];
+                        [[Utility appDelegate] setAccount:account];
+                        [account release];
+                        
+                        [sgmProduct setSelectedSegmentIndex:0];
+                        NSArray *products = [result products];
+                        if (products && [products count])
+                        {
+                            [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                                [sgmProduct setAlpha:1.0f];
+                            } completion:NULL];
+                            [self setProducts:products];
+                        }
+                        else
+                        {
+                            [sgmProduct setSelectedSegmentIndex:0];
+                            [sgmProduct setAlpha:0.0f];
+                            [self setProducts:NULL];
+                        }
+                        
+                        [products release];
+                    }
+                    else
+                    {
+                        [[[DRToast alloc] initWithMessage:[result errorMessage]] show];
+                        
+                        [self setEmail:NULL];
+                        [self setPassword:NULL];
+                    }
+                    
+                    [result release];
+                }
+            });
+        });
+    }]];
+    [self presentViewController:mLoginAlert animated:TRUE completion:NULL];
 }
 
 -(void)updatePaymentContext:(PaymentContext *)paymentContext
@@ -399,57 +524,44 @@
     if (!paymentContext)
         return;
     
+    double amount = 0.0;
+    NSString *amountString = [txtAmount text];
+    amountString = [Utility stringWithDotComaDigitsOnly:amountString];
+    if (![Utility stringIsNullOrEmty:amountString])
+    {
+        amountString = [amountString stringByReplacingOccurrencesOfString:@"," withString:@"."];
+        amount = [amountString doubleValue];
+    }
+    
     [paymentContext setCurrency:CurrencyType_RUB];
-    [paymentContext setAmount:[[txtAmount text] doubleValue]];
+    [paymentContext setAmount:amount];
+    [paymentContext setExtID:[txtExtId text]];
     
     if (![sgmProduct selectedSegmentIndex])
         [paymentContext setDescription:[txtDescription text]];
     else if ([sgmProduct selectedSegmentIndex] == 1)
-    {
-        [paymentContext setProductCode:@"PRODUCT_TEST"];
-        
-        NSMutableArray *productData = [[NSMutableArray alloc] init];
-        
-        NSMutableDictionary *fildOneData = [[NSMutableDictionary alloc] init];
-        [fildOneData setObject:[txtFieldOne text] forKey:@"FIELD_1"];   // You can also add UIImage object
-        [productData addObject:fildOneData];
-        [fildOneData release];
-        
-        NSMutableDictionary *fildTwoData = [[NSMutableDictionary alloc] init];
-        [fildTwoData setObject:[txtFieldTwo text] forKey:@"FIELD_2"];   // You can also add UIImage object
-        [productData addObject:fildTwoData];
-        [fildTwoData release];
-        
-        [paymentContext setProductData:productData];
-        [productData release];
+    {        
+        [paymentContext setProductCode:[mSelectedProduct code]];
+        [paymentContext setProductData:mProductData];
     }
-    else if ([sgmProduct selectedSegmentIndex] == 2)
-    {
-        [paymentContext setDescription:[txtDescription text]];
-        
-        NSMutableArray *purchases = [[NSMutableArray alloc] init];
-        
-        Purchase *purchase1 = [[Purchase alloc] init];
-        [purchase1 setTitle:@"Позиция 1"];
-        [purchase1 setTaxes:@[@"VAT1800"]];
-        [purchase1 setPrice:120.0];
-        [purchase1 setQuantity:2];
-        
-        Purchase *purchase2 = [[Purchase alloc] init];
-        [purchase2 setTitle:@"Позиция 2"];
-        [purchase2 setTaxes:@[]];
-        [purchase2 setPrice:100.0];
-        [purchase2 setQuantity:1];
-        
-        [purchases addObject:purchase1];
-        [purchase1 release];
-        
-        [purchases addObject:purchase2];
-        [purchase2 release];
-        
-        [paymentContext setPurchases:purchases];
-        [purchases release];
-    }
+    
+    NSString *auxData = [txtAuxData text];
+    if (![Utility stringIsNullOrEmty:auxData])
+        [paymentContext setAuxData:auxData];
+    
+    [paymentContext setReceiptMail:@""];
+    [paymentContext setReceiptPhone:@""];
+}
+
+-(void)enableKeyboardObservers
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:NULL];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:NULL];
+}
+
+-(void)disableKeyboardObservers
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)setEmail:(NSString *)email

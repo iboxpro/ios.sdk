@@ -10,30 +10,38 @@
 #import "ReaderScanner.h"
 #import "Payment.h"
 
-@interface Initial : UIViewController<UIActionSheetDelegate, PaymentDelegate, ReaderScannerDelegate>
+@interface Initial : UIViewController<PaymentDelegate, ReaderScannerDelegate>
 {
 IBOutlet UIActivityIndicatorView *viewActivity;
 IBOutlet UITextField *txtAmount;
 IBOutlet UITextField *txtDescription;
+IBOutlet UITextField *txtExtId;
 IBOutlet UITextField *txtPayType;
 IBOutlet UIButton *btnHistory;
 IBOutlet UIButton *btnPayType;
 IBOutlet UIButton *btnForgetBTReader;
-IBOutlet UIButton *btnPing;
 IBOutlet UIButton *btnOk;
 IBOutlet UISegmentedControl *sgmProduct;
-IBOutlet UITextField *txtFieldOne;
-IBOutlet UITextField *txtFieldTwo;
+IBOutlet UIView *viewProductContainer;
+IBOutlet UITextField *txtProductTitle;
+IBOutlet UIButton *btnProductEdit;
+IBOutlet UITextView *txtAuxData;
+IBOutlet UILabel *lblProductData;
     
 IBOutlet NSLayoutConstraint *ctrFieldsHeight;
 IBOutlet NSLayoutConstraint *ctrDescriptionHeight;
-
-@private UIActionSheet *mReaderMenu;
-@private UIActionSheet *mPaymentMenu;
-@private UIAlertView *mLoginAlert;
+IBOutlet NSLayoutConstraint *ctrPayTypeHeight;
+IBOutlet NSLayoutConstraint *ctrScrollBottom;
+    
+@private UIAlertController *mLoginAlert;
 @private NSString *mEmail;
 @private NSString *mPassword;
+@private UITapGestureRecognizer *mTapGestureRecognizer;
 }
+
+@property (retain, nonatomic) DescriptionProduct *SelectedProduct;
+@property (retain, nonatomic) NSArray *ProductData;
+@property (retain, nonatomic) NSArray *Products;
 
 -(Initial *)init;
 

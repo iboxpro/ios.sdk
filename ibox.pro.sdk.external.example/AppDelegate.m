@@ -27,9 +27,6 @@
     [mNavigationController pushViewController:login animated:FALSE];
     [login release];
     
-    [[UIApplication sharedApplication] setStatusBarHidden:FALSE];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    
     [self setAccount:NULL];
     
     return TRUE;
@@ -67,6 +64,11 @@
     }
 }
 
+-(UIViewController *)currentViewController
+{
+    return [[mNavigationController viewControllers] lastObject];
+}
+
 -(UIWindow *)window
 {
     return mWindow;
@@ -76,5 +78,14 @@
 {
     return mAccount;
 }
+
+/*
+ removed from info.plist 29.05.2019
+ <key>UIBackgroundModes</key>
+ <array>
+ <string>external-accessory</string>
+ <string>bluetooth-central</string>
+ </array>
+ */
 
 @end

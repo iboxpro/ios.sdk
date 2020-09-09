@@ -98,6 +98,24 @@
     return [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"] autorelease];
 }
 
+#pragma mark - String
++(BOOL)stringIsNullOrEmty:(NSString *)string
+{
+    return (!string || [string isEqualToString:@""]);
+}
+
++(NSString *)stringByRemovingCharactersInSetWithString:(NSString *)string CharSet:(NSCharacterSet *)set
+{
+    NSArray *components = [string componentsSeparatedByCharactersInSet:set];
+    return [components componentsJoinedByString:@""];
+}
+
++(NSString *)stringWithDotComaDigitsOnly:(NSString *)inputString
+{
+    NSCharacterSet *digitChars = [NSCharacterSet characterSetWithCharactersInString:@".,0123456789"];
+    return [Utility stringByRemovingCharactersInSetWithString:inputString CharSet:[digitChars invertedSet]];
+}
+
 #pragma mark - Image
 +(UIImage *)createQRWithString:(NSString *)qrString
 {
@@ -124,6 +142,28 @@
 +(AppDelegate *)appDelegate
 {
     return ((AppDelegate *)[[UIApplication sharedApplication] delegate]);
+}
+
++(BOOL)isViewControllerOnTop:(UIViewController *)viewController
+{
+    BOOL returnValue = FALSE;
+    UIViewController *currentTopViewController = [[Utility appDelegate] currentViewController];
+    if (currentTopViewController == viewController)
+        returnValue = TRUE;
+    return returnValue;
+}
+
++(int)keyboardHeightWithNotification:(NSNotification *)notification
+{
+    int height = 0;
+    if ([[notification name] isEqualToString:@"UIKeyboardWillShowNotification"])
+    {
+        NSDictionary *info = [notification userInfo];
+        NSValue *frameBegin = [info valueForKey:UIKeyboardFrameEndUserInfoKey];
+        CGRect frameBeginRect = [frameBegin CGRectValue];
+        height = frameBeginRect.size.height;
+    }
+    return height;
 }
 
 @end

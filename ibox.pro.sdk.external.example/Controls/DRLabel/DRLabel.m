@@ -35,6 +35,12 @@
 }
 
 #pragma mark - Public methods
+-(void)setText:(NSString *)text
+{
+    [self setAttributedText:NULL];
+    [super setText:text];
+}
+
 -(void)strikethrough
 {
     if (![self text] || [[self text] isEqualToString:@""])

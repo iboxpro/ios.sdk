@@ -13,7 +13,6 @@
 #import "PaymentContext.h"
 #import "StepItem.h"
 #import "BTDevice.h"
-#import "UIActionSheet+Blocks.h"
 #import "DRToast.h"
 
 @implementation Payment
@@ -22,6 +21,13 @@
 -(Payment *)init
 {
     self = [super initWithNibName:@"Payment" bundle:NULL];
+    if (self)
+    {
+        mPaymentContext = NULL;
+        mTransactionData = NULL;
+        mErrorAlert = NULL;
+        mFiscalCounter = 0;
+    }
     return self;
 }
 
@@ -43,10 +49,13 @@
     
     [[PaymentController instance] setDelegate:self];
     [[PaymentController instance] setPaymentContext:mPaymentContext];
+    [[PaymentController instance] setSingleStepAuthentication:TRUE];
     [[PaymentController instance] enable];
     
     if ([mPaymentContext InputType] == TransactionInputType_CASH ||
         [mPaymentContext InputType] == TransactionInputType_PREPAID ||
+        [mPaymentContext InputType] == TransactionInputType_CREDIT ||
+        [mPaymentContext InputType] == TransactionInputType_OUTER_CARD ||
         [mPaymentContext InputType] == TransactionInputType_LINK ||
         [mPaymentContext isKindOfClass:[ReversePaymentContext class]] ||
         [mPaymentContext isKindOfClass:[RecurrentPaymentContext class]])
@@ -56,19 +65,19 @@
     
     [btnClose addTarget:self action:@selector(btnCloseClick) forControlEvents:UIControlEventTouchUpInside];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disable) name:UIApplicationDidEnterBackgroundNotification object:NULL];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enable) name:UIApplicationWillEnterForegroundNotification object:NULL];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterBackground) name:UIApplicationDidEnterBackgroundNotification object:NULL];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterForeground) name:UIApplicationWillEnterForegroundNotification object:NULL];
 }
 
--(void)disable
+-(void)enterBackground
 {
-    NSLog(@"Disabled WisePad");
+    NSLog(@"Enter background");
     //[mPaymentController disable];
 }
 
--(void)enable
+-(void)enterForeground
 {
-    NSLog(@"Enabled WisePad");
+    NSLog(@"Enter foreground");
     //[mPaymentController enable];
 }
 
@@ -80,50 +89,6 @@
     [[PaymentController instance] disable];
 }
 
-#pragma mark - UIActionSheetDelegate
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (actionSheet == mCardAppsMenu)
-    {
-        if (buttonIndex == actionSheet.cancelButtonIndex)
-            [[PaymentController instance] setCardApplication:-1];
-        else
-            [[PaymentController instance] setCardApplication:(int)buttonIndex - 1];
-        mCardAppsMenu = NULL;
-    }
-}
-
-#pragma mark - UIAlertViewDelegate
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView == mErrorAlert)
-    {
-        if (!buttonIndex)
-            [self btnCloseClick];
-        else
-        {
-            [[PaymentController instance] retry];
-            if ([mPaymentContext InputType] == TransactionInputType_CASH ||
-                [mPaymentContext InputType] == TransactionInputType_PREPAID)
-                [lblText setText:[Utility localizedStringWithKey:@"payment_processing"]];
-            else
-                [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
-        }
-        [mErrorAlert release];
-        mErrorAlert = NULL;
-    }
-    else
-    {
-        if (!buttonIndex)
-            [self btnCloseClick];
-        else
-        {
-            [[PaymentController instance] scheduleStepsConfirm];
-            [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
-        }
-    }
-}
-
 #pragma mark - PaymentControllerDelegate
 -(void)PaymentControllerStartTransaction:(NSString *)transactionID
 {
@@ -132,8 +97,12 @@
 
 -(void)PaymentControllerReaderEvent:(PaymentControllerReaderEventType)event
 {
-    if (event == PaymentControllerReaderEventType_INITIALIZATION)
+    if (event == PaymentControllerReaderEventType_INITIALIZED)
+    {
+        NSDictionary *readerInfo = [[PaymentController instance] readerInfo];
+        if (readerInfo) NSLog(@"ReaderInfo:%@", readerInfo);
         [lblText setText:[self readerReady4ActionString]];
+    }
     else if (event == PaymentControllerReaderEventType_CONNECTED)
         [lblText setText:[Utility localizedStringWithKey:@"payment_reader_init"]];
     else if (event == PaymentControllerReaderEventType_DISCONNECTED)
@@ -146,18 +115,9 @@
 
 -(void)PaymentControllerDone:(TransactionData *)transactionData
 {
-    Card *card = [[transactionData Transaction] card];
-    if ([card panMasked] && ![[card panMasked] isEqualToString:@""] && ![[card panMasked] isEqual:[NSNull null]])
-        NSLog(@"%@", [card panMasked]);
-    [card release];
-    
-    [self.navigationController popViewControllerAnimated:FALSE];
-    
-    if (mDelegate && [mDelegate respondsToSelector:@selector(paymentFinished:)])
-        [mDelegate paymentFinished:transactionData];
-    
-    [[PaymentController instance] setDelegate:NULL];
-    [[PaymentController instance] disable];
+    mTransactionData = transactionData;
+    mFiscalCounter = 0;
+    [self checkFiscalInfo];
 }
 
 -(void)PaymentControllerError:(PaymentControllerErrorType)error Message:(NSString *)message
@@ -174,13 +134,17 @@
             errorMessage = message;
         else
         {
-            if (error == PaymentControllerErrorType_EMV_ZERO_TRAN)
-                errorMessage = [Utility localizedStringWithKey:@"payment_error_zero_transaction"];
+            if (error == PaymentControllerErrorType_ZERO_AMOUNT)
+                errorMessage = [Utility localizedStringWithKey:@"payment_error_emv_zero_tran"];
+            else if (error == PaymentControllerErrorType_EMV_CANCEL)
+                errorMessage = [Utility localizedStringWithKey:@"payment_error_emv_cancel"];
             else if (error == PaymentControllerErrorType_READER_DISCONNECTED)
                 errorMessage = [Utility localizedStringWithKey:@"payment_error_reader_disconnected"];
             else if (error == PaymentControllerErrorType_REVERSE ||
                      error == PaymentControllerErrorType_REVERSE_CASH ||
-                     error == PaymentControllerErrorType_REVERSE_PREPAID)
+                     error == PaymentControllerErrorType_REVERSE_PREPAID ||
+                     error == PaymentControllerErrorType_REVERSE_AUTO ||
+                     error == PaymentControllerErrorType_REVERSE_CNP)
                 errorMessage = [Utility localizedStringWithKey:@"payment_error_reverse"];
             else if (error == PaymentControllerErrorType_READER_TIMEOUT)
                 errorMessage = [Utility localizedStringWithKey:@"payment_error_reader_timeout"];
@@ -194,13 +158,28 @@
         
         if (mErrorAlert)
         {
-            [mErrorAlert dismissWithClickedButtonIndex:0 animated:FALSE];
-            [mErrorAlert release];
+            [mErrorAlert dismissViewControllerAnimated:TRUE completion:NULL];
             mErrorAlert = NULL;
         }
         
-        mErrorAlert = [[UIAlertView alloc] initWithTitle:NULL message:errorMessage delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:otherButtonTitle, NULL];
-        [mErrorAlert show];
+        mErrorAlert = [UIAlertController alertControllerWithTitle:NULL message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+        [mErrorAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self btnCloseClick];
+            mErrorAlert = NULL;
+        }]];
+        [mErrorAlert addAction:[UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[PaymentController instance] retry];
+            if ([mPaymentContext InputType] == TransactionInputType_CASH ||
+                [mPaymentContext InputType] == TransactionInputType_PREPAID ||
+                [mPaymentContext InputType] == TransactionInputType_CREDIT ||
+                [mPaymentContext InputType] == TransactionInputType_OUTER_CARD ||
+                [mPaymentContext InputType] == TransactionInputType_LINK)
+                [lblText setText:[Utility localizedStringWithKey:@"payment_processing"]];
+            else
+                [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+            mErrorAlert = NULL;
+        }]];
+        [self presentViewController:mErrorAlert animated:TRUE completion:NULL];
     }
 }
 
@@ -211,11 +190,18 @@
 
 -(void)PaymentControllerRequestCardApplication:(NSArray *)applications
 {
-    mCardAppsMenu = [[UIActionSheet alloc] initWithTitle:[Utility localizedStringWithKey:@"payment_choose_card_app"] delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] destructiveButtonTitle:NULL otherButtonTitles:NULL];
+    UIAlertController *cardAppsMenu = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"payment_choose_card_app"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+    [cardAppsMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [[PaymentController instance] setCardApplication:-1];
+    }]];
     for (NSString *application in applications)
-        [mCardAppsMenu addButtonWithTitle:application];
-    [mCardAppsMenu showInView:self.view];
-    [mCardAppsMenu release];
+    {
+        [cardAppsMenu addAction:[UIAlertAction actionWithTitle:application style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            int index = (int)[[cardAppsMenu actions] indexOfObject:action];
+            [[PaymentController instance] setCardApplication:(int)index - 1];
+        }]];
+    }
+    [self presentViewController:cardAppsMenu animated:TRUE completion:NULL];
 }
 
 -(void)PaymentControllerScheduleStepsStart
@@ -236,8 +222,15 @@
         }
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[Utility localizedStringWithKey:@"payment_steps"] message:message delegate:self cancelButtonTitle:[Utility localizedStringWithKey:@"common_cancel"] otherButtonTitles:[Utility localizedStringWithKey:@"common_next"], NULL];
-    [alert show];
+    UIAlertController *stepsAlert = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"payment_steps"] message:message preferredStyle:UIAlertControllerStyleAlert];
+    [stepsAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [self btnCloseClick];
+    }]];
+    [stepsAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_next"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[PaymentController instance] scheduleStepsConfirm];
+        [lblText setText:[[PaymentController instance] isReaderConnected] ? [self readerReady4ActionString] : [Utility localizedStringWithKey:@"payment_reader_connect"]];
+    }]];
+    [self presentViewController:stepsAlert animated:TRUE completion:NULL];
 }
 
 #pragma mark - Public methods
@@ -260,10 +253,73 @@
 #pragma mark - Other methods
 -(NSString *)readerReady4ActionString
 {
-    if ([mPaymentContext isKindOfClass:[RecurrentPaymentContext class]])
-        return [Utility localizedStringWithKey:@"payment_swipe"];
+    return [Utility localizedStringWithKey:@"payment_swipe_insert_tap"];
+}
+
+-(void)checkFiscalInfo
+{
+    Account *account = [[Utility appDelegate] account];
+    if ([mPaymentContext InputType] == TransactionInputType_LINK)
+        [self paymentDone];
     else
-        return [Utility localizedStringWithKey:@"payment_swipe_insert"];
+    {
+        if ([account usesServerFiscalization])
+            [self processFiscalInfo];
+        else
+            [self paymentDone];
+    }
+}
+
+-(void)processFiscalInfo
+{
+    if (mFiscalCounter > 2)
+        [self paymentDone];
+    else
+    {
+        mFiscalCounter++;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            APIFiscalInfoResult *result = [[PaymentController instance] fiscalInfoWithTrId:[[mTransactionData Transaction] ID]];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                if (![result valid] || [result errorCode])
+                    [self processFiscalInfo];
+                else
+                {
+                    TransactionItem *transaction = [result transaction];
+                    FiscalInfo *fiscalInfo = [transaction fiscalInfo];
+                    if (!fiscalInfo)
+                        [self processFiscalInfo];
+                    else
+                    {
+                        if ([fiscalInfo status] != FiscalInfoStatus_SUCCESS)
+                            [self processFiscalInfo];
+                        else
+                        {
+                            [mTransactionData setTransaction:[result transaction]];
+                            [self paymentDone];
+                        }
+                        [fiscalInfo release];
+                    }
+                }
+            });
+        });
+    }
+}
+
+-(void)paymentDone
+{
+    Card *card = [[mTransactionData Transaction] card];
+    if (![Utility stringIsNullOrEmty:[card panMasked]] &&
+        ![[card panMasked] isEqual:[NSNull null]])
+        NSLog(@"%@", [card panMasked]);
+    [card release];
+    
+    [self.navigationController popViewControllerAnimated:FALSE];
+    
+    if (mDelegate && [mDelegate respondsToSelector:@selector(paymentFinished:)])
+        [mDelegate paymentFinished:mTransactionData];
+    
+    [[PaymentController instance] setDelegate:NULL];
+    [[PaymentController instance] disable];
 }
 
 @end

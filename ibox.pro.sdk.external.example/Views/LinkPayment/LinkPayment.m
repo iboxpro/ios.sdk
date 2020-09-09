@@ -53,14 +53,14 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[PaymentController instance] setRequestTimeOut:240];
+    [[PaymentController instance] setRequestTimeout:240];
     [self checkPaymentStatus];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[PaymentController instance] setRequestTimeOut:30];
+    [[PaymentController instance] setRequestTimeout:30];
 }
 
 #pragma mark - Events
@@ -195,24 +195,27 @@
 
 -(void)checkPaymentStatus
 {
-    if (mTransactionData)
+    if ([Utility isViewControllerOnTop:self])
     {
-        TransactionItem *transaction = [mTransactionData Transaction];
-        if (transaction)
+        if (mTransactionData)
         {
-            [[PaymentController instance] paymentStatusWithTrId:[transaction ID] DoneAction:^(APIResult *result) {
-                if (result && [result valid] && ![result errorCode])
-                {
-                    PaymentResult *paymentResult = [[PaymentResult alloc] init];
-                    [paymentResult setTransactionData:mTransactionData];
-                    [self.navigationController pushViewController:paymentResult animated:TRUE];
-                    [paymentResult release];
-                }
-                else
-                {
-                    [self checkPaymentStatus];
-                }
-            }];
+            TransactionItem *transaction = [mTransactionData Transaction];
+            if (transaction)
+            {
+                [[PaymentController instance] paymentStatusWithTrId:[transaction ID] DoneAction:^(APIResult *result) {
+                    if (result && [result valid] && ![result errorCode] && [Utility isViewControllerOnTop:self])
+                    {
+                        PaymentResult *paymentResult = [[PaymentResult alloc] init];
+                        [paymentResult setTransactionData:mTransactionData];
+                        [self.navigationController pushViewController:paymentResult animated:TRUE];
+                        [paymentResult release];
+                    }
+                    else
+                    {
+                        [self checkPaymentStatus];
+                    }
+                }];
+            }
         }
     }
 }

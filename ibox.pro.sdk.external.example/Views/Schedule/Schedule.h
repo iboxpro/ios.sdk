@@ -12,7 +12,7 @@
 @class RecurrentPaymentContext;
 @class PaymentController;
 
-@interface Schedule : UIViewController<UITextFieldDelegate, UIActionSheetDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PaymentDelegate>
+@interface Schedule : UIViewController<UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PaymentDelegate>
 {
 IBOutlet UITextField *txtEmail;
 IBOutlet UITextField *txtPhone;

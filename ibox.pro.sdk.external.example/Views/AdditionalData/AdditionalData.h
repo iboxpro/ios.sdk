@@ -13,12 +13,14 @@
 
 @interface AdditionalData : UIViewController<UITextFieldDelegate>
 {
+IBOutlet UIActivityIndicatorView *viewActivity;
 IBOutlet UITextField *txtReceiptMail;
 IBOutlet UITextField *txtReceiptPhone;
 IBOutlet UIButton *btnOk;
 IBOutlet UIView *viewCover;
 IBOutlet SignatureView *viewSignature;
 IBOutlet NSLayoutConstraint *ctrReceiptDataTop;
+@private UITapGestureRecognizer *mTapGestureRecognizer;
     
 @private TransactionData *mTransactionData;
 }

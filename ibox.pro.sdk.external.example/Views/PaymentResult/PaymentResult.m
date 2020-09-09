@@ -97,6 +97,12 @@
             [slipString appendString:@": "];
             [self safeAppendString:[transaction invoice] MotherString:slipString];
             [slipString appendString:@"\n"];
+
+            [slipString appendString:[Utility localizedStringWithKey:@"payment_result_transaction_rrn"]];
+            [slipString appendString:@": "];
+            [self safeAppendString:[transaction rrn] MotherString:slipString];
+            [slipString appendString:@"\n"];
+
             
             [slipString appendString:[Utility localizedStringWithKey:@"payment_result_transaction_approval_code"]];
             [slipString appendString:@": "];
@@ -131,6 +137,28 @@
             [self safeAppendString:[transaction operation] MotherString:slipString];
             [slipString appendString:@"\n"];
             
+            if (![Utility stringIsNullOrEmty:[transaction extID]])
+            {
+                [slipString appendString:[Utility localizedStringWithKey:@"payment_result_transaction_extid"]];
+                [slipString appendString:@": "];
+                [self safeAppendString:[transaction extID] MotherString:slipString];
+                [slipString appendString:@"\n"];
+            }
+            
+            FiscalInfo *fiscalInfo = [transaction fiscalInfo];
+            if ([fiscalInfo status] == FiscalInfoStatus_SUCCESS)
+            {
+                [slipString appendString:[Utility localizedStringWithKey:@"fiscal_info_title"]];
+                [slipString appendString:@":\n"];
+                [slipString appendFormat:@"\t%@\n", [fiscalInfo dateTime]];
+                [slipString appendFormat:@"\t%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_invoice"], [fiscalInfo printerDocSerialNumber]];
+                [slipString appendFormat:@"\t%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_fd"], [fiscalInfo documentNumber]];
+                [slipString appendFormat:@"\t%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_fn"], [fiscalInfo storageNumber]];
+                [slipString appendFormat:@"\t%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_fdp"], [fiscalInfo documentMark]];
+                [slipString appendFormat:@"\t%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_zn"], [fiscalInfo printerSerialNumber]];
+                [slipString appendFormat:@"\t%@%@\n", [Utility localizedStringWithKey:@"fiscal_info_shift"], [fiscalInfo printerShift]];
+            }
+            
             NSString *amountFormat = [NSString stringWithFormat:@"%@ %@", [transaction amountFormatWithoutCurrency], [transaction currencySignSafe]];
             
             [slipString appendString:[Utility localizedStringWithKey:@"payment_result_transaction_amount"]];
@@ -139,10 +167,8 @@
             [slipString appendString:@"\n"];
             
             [slipString appendString:[Utility localizedStringWithKey:@"payment_result_transaction_tax"]];
-            [slipString appendString:@": "];
-            [self safeAppendString:[NSString stringWithFormat:amountFormat, [transaction feeTotal]] MotherString:slipString];
             [slipString appendString:@"\n"];
-            
+
             [slipString appendString:[Utility localizedStringWithKey:@"payment_result_transaction_state"]];
             [slipString appendString:@": "];
             [self safeAppendString:[transaction stateDisplay] MotherString:slipString];
