@@ -69,6 +69,7 @@
     [btnProductEdit release];
     [txtExtId release];
     [txtAuxData release];
+    [swcSingleStep release];
     [super dealloc];
 }
 
@@ -365,8 +366,9 @@
 }
 
 #pragma mark - PaymentDelegate
--(void)paymentFinished:(TransactionData *)transactionData
+-(void)paymentFinished:(TransactionData *)transactionData readerInfo:(NSDictionary *)info
 {
+    
     if (!transactionData)
         return;
     
@@ -383,6 +385,7 @@
         {
             AdditionalData *additionalData = [[AdditionalData alloc] init];
             [additionalData setTransactionData:transactionData];
+            [additionalData setReaderInfo:info];
             [self.navigationController pushViewController:additionalData animated:TRUE];
             [additionalData release];
         }
@@ -390,6 +393,7 @@
         {
             PaymentResult *paymentResult = [[PaymentResult alloc] init];
             [paymentResult setTransactionData:transactionData];
+            [paymentResult setReaderInfo:info];
             [self.navigationController pushViewController:paymentResult animated:TRUE];
             [paymentResult release];
         }
@@ -454,7 +458,7 @@
         [textField setPlaceholder:@"Password"];
         [textField setSecureTextEntry:TRUE];
     }];
-    
+        
     [mLoginAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
     [mLoginAlert addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         if (![viewActivity isHidden])
@@ -523,6 +527,8 @@
 {
     if (!paymentContext)
         return;
+    
+    [[PaymentController instance] setSingleStepAuthentication:[swcSingleStep isOn]];
     
     double amount = 0.0;
     NSString *amountString = [txtAmount text];

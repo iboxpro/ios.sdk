@@ -16,9 +16,10 @@ IBOutlet UITextView *txtData;
 IBOutlet UIButton *btnOk;
     
 @private TransactionData *mTransactionData;
+@private NSDictionary    *mReaderInfo;
 }
 
 -(PaymentResult *)init;
 -(void)setTransactionData:(TransactionData *)data;
-
+-(void)setReaderInfo:(NSDictionary *)info;
 @end

@@ -49,7 +49,6 @@
     
     [[PaymentController instance] setDelegate:self];
     [[PaymentController instance] setPaymentContext:mPaymentContext];
-    [[PaymentController instance] setSingleStepAuthentication:TRUE];
     [[PaymentController instance] enable];
     
     if ([mPaymentContext InputType] == TransactionInputType_CASH ||
@@ -99,8 +98,8 @@
 {
     if (event == PaymentControllerReaderEventType_INITIALIZED)
     {
-        NSDictionary *readerInfo = [[PaymentController instance] readerInfo];
-        if (readerInfo) NSLog(@"ReaderInfo:%@", readerInfo);
+        mReaderInfo = [[PaymentController instance] readerInfo];
+        if (mReaderInfo) NSLog(@"ReaderInfo:%@", mReaderInfo);
         [lblText setText:[self readerReady4ActionString]];
     }
     else if (event == PaymentControllerReaderEventType_CONNECTED)
@@ -315,8 +314,8 @@
     
     [self.navigationController popViewControllerAnimated:FALSE];
     
-    if (mDelegate && [mDelegate respondsToSelector:@selector(paymentFinished:)])
-        [mDelegate paymentFinished:mTransactionData];
+    if (mDelegate && [mDelegate respondsToSelector:@selector(paymentFinished:readerInfo:)])
+        [mDelegate paymentFinished:mTransactionData readerInfo:mReaderInfo];
     
     [[PaymentController instance] setDelegate:NULL];
     [[PaymentController instance] disable];

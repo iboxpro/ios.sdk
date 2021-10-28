@@ -27,6 +27,7 @@ IBOutlet UITextField *txtProductTitle;
 IBOutlet UIButton *btnProductEdit;
 IBOutlet UITextView *txtAuxData;
 IBOutlet UILabel *lblProductData;
+IBOutlet UISwitch *swcSingleStep;
     
 IBOutlet NSLayoutConstraint *ctrFieldsHeight;
 IBOutlet NSLayoutConstraint *ctrDescriptionHeight;

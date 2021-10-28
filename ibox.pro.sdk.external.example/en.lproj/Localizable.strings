@@ -58,6 +58,7 @@
 "initial_purchase_data" = "Current purchase data:";
 "initial_purchase_no_data" = "No purchase data.";
 "initial_extid_hint" = "ExtID";
+"initial_single_step" = "Single step authentication:";
 
 /* Product */
 "product_preparable" = "Preparable product";

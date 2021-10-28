@@ -140,7 +140,7 @@
 }
 
 #pragma mark - PaymentDelegate
--(void)paymentFinished:(TransactionData *)transactionData
+-(void)paymentFinished:(TransactionData *)transactionData readerInfo:(NSDictionary *)info
 {
     if (!transactionData)
         return;
@@ -236,7 +236,7 @@
     [txtPhone resignFirstResponder];
     [txtDates resignFirstResponder];
     
-    UIAlertController *monthMenu = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"schedule_week_day"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *monthMenu = [UIAlertController  alertControllerWithTitle:[Utility localizedStringWithKey:@"schedule_month"] message:NULL preferredStyle:UIAlertControllerStyleActionSheet];
     [monthMenu addAction:[UIAlertAction actionWithTitle:[Utility localizedStringWithKey:@"common_cancel"] style:UIAlertActionStyleCancel handler:NULL]];
     if (mRecurrentPaymentContext.Type == ScheduleType_Annual)
     {

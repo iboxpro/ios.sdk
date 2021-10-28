@@ -63,8 +63,8 @@
     if (![viewSignature isEmpty])
         signatureData = [viewSignature getByteArray];
     
-    __block NSString *email = [txtReceiptMail text];
-    __block NSString *phone = [txtReceiptPhone text];
+    NSString *email = [txtReceiptMail text];
+    NSString *phone = [txtReceiptPhone text];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         APIResult *result = NULL;
@@ -84,6 +84,7 @@
                 {
                     PaymentResult *paymentResult = [[PaymentResult alloc] init];
                     [paymentResult setTransactionData:mTransactionData];
+                    [paymentResult setReaderInfo:mReaderInfo];
                     [self.navigationController pushViewController:paymentResult animated:TRUE];
                     [paymentResult release];
                 }
@@ -166,6 +167,16 @@
             [mTransactionData release];
         [data retain];
         mTransactionData = data;
+    }
+}
+
+-(void)setReaderInfo:(NSDictionary *)info {
+    if (mReaderInfo != info)
+    {
+        if (mReaderInfo)
+            [mReaderInfo release];
+        [info retain];
+        mReaderInfo = info;
     }
 }
 

@@ -11,6 +11,8 @@
 		034B0B2323F6C57C0050B1F7 /* ProductDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 034B0B2123F6C57B0050B1F7 /* ProductDetailsCell.xib */; };
 		034EC9F223F5A98E00F3289D /* ProductDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 034EC9F023F5A98E00F3289D /* ProductDetails.m */; };
 		034EC9F323F5A98E00F3289D /* ProductDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = 034EC9F123F5A98E00F3289D /* ProductDetails.xib */; };
+		03BDE3F0254B022700ED744A /* default.metallib in Resources */ = {isa = PBXBuildFile; fileRef = 03BDE3EF254B022700ED744A /* default.metallib */; };
+		03BDE3FC254B034300ED744A /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03BDE3FB254B034300ED744A /* MetalKit.framework */; };
 		49BDE7691F34B0F400D1DECA /* libibox.pro.sdk.external.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */; };
 		5C031FFF1B500846005D8737 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C031FFD1B500846005D8737 /* History.m */; };
 		5C0320001B500846005D8737 /* History.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5C031FFE1B500846005D8737 /* History.xib */; };
@@ -62,6 +64,9 @@
 		034EC9F023F5A98E00F3289D /* ProductDetails.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductDetails.m; sourceTree = "<group>"; };
 		034EC9F123F5A98E00F3289D /* ProductDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductDetails.xib; sourceTree = "<group>"; };
 		036860992423983000418E07 /* APIFiscalInfoResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIFiscalInfoResult.h; sourceTree = "<group>"; };
+		03BDE3EE254B022000ED744A /* SignatureMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignatureMetal.h; sourceTree = "<group>"; };
+		03BDE3EF254B022700ED744A /* default.metallib */ = {isa = PBXFileReference; lastKnownFileType = "archive.metal-library"; path = default.metallib; sourceTree = "<group>"; };
+		03BDE3FB254B034300ED744A /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		03CD4333220C770400DB4698 /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
 		49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libibox.pro.sdk.external.a; sourceTree = "<group>"; };
 		496E6FC11A9757BD00750961 /* APIResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIResult.h; sourceTree = "<group>"; };
@@ -152,6 +157,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03BDE3FC254B034300ED744A /* MetalKit.framework in Frameworks */,
 				49BDE7691F34B0F400D1DECA /* libibox.pro.sdk.external.a in Frameworks */,
 				5CC4477B1A80EAA600F71FBD /* AVFoundation.framework in Frameworks */,
 				5CC447791A80EA9A00F71FBD /* GLKit.framework in Frameworks */,
@@ -183,6 +189,14 @@
 				034B0B2123F6C57B0050B1F7 /* ProductDetailsCell.xib */,
 			);
 			path = ProductDetails;
+			sourceTree = "<group>";
+		};
+		03BDE3FA254B034300ED744A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03BDE3FB254B034300ED744A /* MetalKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5C031FFB1B50083A005D8737 /* History */ = {
@@ -235,6 +249,7 @@
 			children = (
 				5CAF8F6D1A7FD88800AB3B25 /* ibox.pro.sdk.external.example */,
 				5CAF8F6C1A7FD88800AB3B25 /* Products */,
+				03BDE3FA254B034300ED744A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -331,8 +346,11 @@
 		5CAF8FA01A7FE6A600AB3B25 /* SDK */ = {
 			isa = PBXGroup;
 			children = (
-				49A2745E24D2C94C00C059BF /* Result.h */,
 				49683F6F1C0EECA300CF6CA3 /* libibox.pro.sdk.external.a */,
+				03BDE3EF254B022700ED744A /* default.metallib */,
+				03BDE3EE254B022000ED744A /* SignatureMetal.h */,
+				5CC4476A1A80E8B100F71FBD /* SignatureView.h */,
+				49A2745E24D2C94C00C059BF /* Result.h */,
 				034E9BF123FB10E000699C40 /* APIPrepareResult.h */,
 				034BF0262423D05700468853 /* APIFiscalizeResult.h */,
 				036860992423983000418E07 /* APIFiscalInfoResult.h */,
@@ -355,7 +373,6 @@
 				5CF35B811B0361E100048C07 /* PaymentContext.h */,
 				5CE5C4621B985E5B00BF3C10 /* ReversePaymentContext.h */,
 				5CF35B821B0361E100048C07 /* RecurrentPaymentContext.h */,
-				5CC4476A1A80E8B100F71FBD /* SignatureView.h */,
 				5C034C721D4B78F20091711E /* BTDevice.h */,
 				5CA31BEE1F4C7A3E0002E9FA /* Purchase.h */,
 				03CD4333220C770400DB4698 /* Tag.h */,
@@ -488,6 +505,7 @@
 				5C0320051B50128F005D8737 /* HistoryCell.xib in Resources */,
 				034EC9F323F5A98E00F3289D /* ProductDetails.xib in Resources */,
 				5CAF8F7C1A7FD88800AB3B25 /* Images.xcassets in Resources */,
+				03BDE3F0254B022700ED744A /* default.metallib in Resources */,
 				5CE40C871B04D50F00B9196D /* Schedule.xib in Resources */,
 				5CC4475C1A80D4CC00F71FBD /* Initial.xib in Resources */,
 				5CE05A251B9D9632002E9E24 /* Localizable.strings in Resources */,
@@ -553,7 +571,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -582,7 +600,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
@@ -596,7 +614,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -618,7 +636,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

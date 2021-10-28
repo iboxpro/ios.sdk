@@ -140,7 +140,7 @@
 }
 
 #pragma mark - PaymentDelegate
--(void)paymentFinished:(TransactionData *)transactionData
+-(void)paymentFinished:(TransactionData *)transactionData readerInfo:(NSDictionary *)info
 {
     if (!transactionData)
         return;

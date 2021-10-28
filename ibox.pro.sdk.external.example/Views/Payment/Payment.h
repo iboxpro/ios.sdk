@@ -13,7 +13,7 @@
 
 @protocol PaymentDelegate<NSObject>
 @optional
--(void)paymentFinished:(TransactionData *)transactionData;
+-(void)paymentFinished:(TransactionData *)transactionData readerInfo:(NSDictionary *)info;
 @end
 
 @interface Payment : UIViewController<PaymentControllerDelegate>
@@ -26,6 +26,7 @@ IBOutlet UILabel *lblText;
 @private TransactionData *mTransactionData;
 @private UIAlertController *mErrorAlert;
 @private int mFiscalCounter;
+@private NSDictionary *mReaderInfo;
 }
 
 -(Payment *)init;

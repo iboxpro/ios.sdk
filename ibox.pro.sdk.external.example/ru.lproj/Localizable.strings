@@ -58,6 +58,7 @@
 "initial_purchase_data" = "Текущие данные покупок:";
 "initial_purchase_no_data" = "Покупки отсутствуют.";
 "initial_extid_hint" = "Внешний идентификатор";
+"initial_single_step" = "Одношаговая транзакция:";
 
 /* Product */
 "product_preparable" = "Загрузка данных заказа";

@@ -209,6 +209,11 @@
             [dataString appendFormat:@"\n\nSlip:\n%@", slipString];
         }
         
+        if (mReaderInfo) {
+            for (id key in mReaderInfo)
+                [dataString appendFormat:@"\n%@ : %@", key, [mReaderInfo objectForKey:key]];
+        }
+        
         [txtData setText:dataString];
         [dataString release];
         
@@ -243,6 +248,16 @@
             [mTransactionData release];
         [data retain];
         mTransactionData = data;
+    }
+}
+
+-(void)setReaderInfo:(NSDictionary *)info {
+    if (mReaderInfo != info)
+    {
+        if (mReaderInfo)
+            [mReaderInfo release];
+        [info retain];
+        mReaderInfo = info;
     }
 }
 

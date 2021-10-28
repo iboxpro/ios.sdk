@@ -23,9 +23,11 @@ IBOutlet NSLayoutConstraint *ctrReceiptDataTop;
 @private UITapGestureRecognizer *mTapGestureRecognizer;
     
 @private TransactionData *mTransactionData;
+@private NSDictionary    *mReaderInfo;
 }
 
 -(AdditionalData *)init;
 -(void)setTransactionData:(TransactionData *)data;
+-(void)setReaderInfo:(NSDictionary *)info;
 
 @end
